@@ -23,7 +23,7 @@
                     form.username.value = form.username.value.trim();
 
                     if (form.username.value.length == 0) {
-                        warningModal("로그인아이디를 입력해주세요.");
+                        warningModal("로그인 아이디를 입력해주세요.");
                         form.username.focus();
 
                         return;
@@ -32,8 +32,17 @@
                     form.password.value = form.password.value.trim();
 
                     if (form.password.value.length == 0) {
-                        warningModal("로그인비밀번호를 입력해주세요.");
+                        warningModal("로그인 비밀번호를 입력해주세요.");
                         form.password.focus();
+
+                        return;
+                    }
+
+                    form.passwordConfirm.value = form.passwordConfirm.value.trim();
+
+                    if (form.passwordConfirm.value != form.password.value) {
+                        warningModal("비밀번호가 일치하지 않습니다.");
+                        form.passwordConfirm.focus();
 
                         return;
                     }
@@ -69,6 +78,14 @@
                     </label>
                     <input type="password" name="password"
                            placeholder="비밀번호" class="input input-bordered" maxlength="50">
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">비밀번호 확인</span>
+                    </label>
+                    <input type="password" name="passwordConfirm"
+                           placeholder="비밀번호 확인" class="input input-bordered" maxlength="50">
                 </div>
 
                 <div class="form-control">
