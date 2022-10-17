@@ -40,4 +40,10 @@ public class MemberController {
     public String showLogin(){
         return "member/login";
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/profile")
+    public String showProfile(){
+        return "member/profile";
+    }
 }
