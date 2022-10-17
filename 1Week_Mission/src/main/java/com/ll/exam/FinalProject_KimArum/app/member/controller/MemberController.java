@@ -35,4 +35,9 @@ public class MemberController {
         return "redirect:/member/login?msg=" + Util.url.encode("회원가입이 완료되었습니다.");
     }
 
+    @PreAuthorize("isAnonymous()")
+    @GetMapping("/login")
+    public String showLogin(){
+        return "member/login";
+    }
 }
