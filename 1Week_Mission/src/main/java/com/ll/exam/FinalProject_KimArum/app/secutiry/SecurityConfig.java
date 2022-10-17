@@ -27,7 +27,10 @@ public class SecurityConfig {
                                 .loginProcessingUrl("/member/login") // POST
                                 .successHandler(authenticationSuccessHandler)
                                 .failureHandler(authenticationFailureHandler)
-                );
+                )
+                .logout(
+                        logout -> logout.logoutUrl("/member/logout")
+                );;
         return http.build();
     }
 }
