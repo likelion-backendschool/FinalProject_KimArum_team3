@@ -17,7 +17,7 @@ import javax.persistence.ManyToOne;
 @ToString(callSuper = true)
 public class Post extends BaseEntity {
     @ManyToOne
-    private Member authorId;
+    private Member author;
 
     private String subject;
     private String content;
