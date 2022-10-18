@@ -1,7 +1,5 @@
 package com.ll.exam.FinalProject_KimArum.app.secutiry.handler;
 
-import com.ll.exam.FinalProject_KimArum.app.secutiry.dto.MemberContext;
-import com.ll.exam.FinalProject_KimArum.util.Util;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
@@ -57,10 +55,6 @@ public class CustomAuthSuccessHandler extends SimpleUrlAuthenticationSuccessHand
                 url = prevPage;
             }
         }
-
-        MemberContext memberContext = (MemberContext) authentication.getPrincipal();
-
-        url = Util.url.modifyQueryParam(url, "msg", memberContext.getName() + "님 환영합니다.");
 
         redirectStrategy.sendRedirect(request, response, url);
     }
