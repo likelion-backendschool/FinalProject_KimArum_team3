@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html layout:decorate="~{/layout/layout}">
+
+<head>
+    <title>메인</title>
+</head>
+
+<main layout:fragment="main">
+    <section>
+        <div class="container px-3 mx-auto mt-3">
+            <div>
+                <div class="font-bold text-xl text-center">
+                    <span th:text="${post?.id}"></span>
+                    <span th:text="${post?.subject}"></span>
+                </div>
+                <div class="text-sm mt-1 text-right">
+                    작성자 : <span th:text="${post?.author.nickname}"></span><br>
+                    작성 : <span th:text="${post?.createDate}"></span><br>
+                    수정 : <span th:text="${post?.updateDate}"></span>
+                </div>
+            </div>
+            <hr class="mt-2">
+            <div class="text-lg mt-2" th:utext="${post.getContentHtml()}">
+
+            </div>
+        </div>
+    </section>
+
+    <script>
+        const viewer = new Viewer({
+            el: document.querySelector('#viewer'),
+            height: '600px',
+            initialValue: '# hello'
+        });
+    </script>
+</main>
+
+</html>
