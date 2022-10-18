@@ -16,23 +16,16 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public Member join(String username, String password, String email, String nickname) {
+    public Member join(String username, String password, String email) {
         if(memberRepository.findByUsername(username).isPresent()){
             throw new AlreadyJoinException();
-        }
-
-        int authLevel = 3;
-
-        if(nickname!=null){
-            authLevel = 7;
         }
 
         Member member = Member.builder()
                 .username(username)
                 .password(passwordEncoder.encode(password))
                 .email(email)
-                .nickname(nickname)
-                .authLevel(authLevel)
+                .authLevel(3)
                 .build();
 
         memberRepository.save(member);
