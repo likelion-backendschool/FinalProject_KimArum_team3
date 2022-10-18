@@ -8,7 +8,10 @@ import com.ll.exam.FinalProject_KimArum.app.secutiry.dto.MemberContext;
 import com.ll.exam.FinalProject_KimArum.util.Util;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -63,6 +66,12 @@ public class MemberController {
         Member member = memberService.findByUsername(modifyForm.getUsername()).get();
 
         memberService.modify(member, modifyForm.getEmail(), modifyForm.getNickname());
+
+        context.setUpdateDate(member.getUpdateDate());
+        context.setEmail(member.getEmail());
+        context.setNickname(member.getNickname());
+        Authentication authentication = new UsernamePasswordAuthenticationToken(context, member.getPassword(), context.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
         return "redirect:/member/profile";
     }
