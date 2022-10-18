@@ -10,6 +10,7 @@ import org.commonmark.renderer.html.HtmlRenderer;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -44,5 +45,9 @@ public class PostService {
 
     public Post getPostById(Long id) {
         return postRepository.findPostById(id).orElse(null);
+    }
+
+    public List<Post> getPosts() {
+        return postRepository.findAllByOrderByIdDesc();
     }
 }

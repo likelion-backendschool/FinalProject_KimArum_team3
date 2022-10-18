@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @RequestMapping("/post")
@@ -34,7 +35,7 @@ public class PostController {
         String htmlContent = postService.markdownToHtml(postForm.getContent());
         Post post = postService.writePost(memberContext.getId(), postForm.getSubject(), postForm.getContent(), htmlContent);
 
-        return "redirect:/";
+        return "redirect:/post/list";
     }
 
     @GetMapping("/{id}")
@@ -44,5 +45,13 @@ public class PostController {
         model.addAttribute("post", post);
 
         return "post/detail";
+    }
+
+    @GetMapping("/list")
+    public String showList(Model model) {
+        List<Post> posts = postService.getPosts();
+        model.addAttribute("posts", posts);
+
+        return "post/list";
     }
 }
