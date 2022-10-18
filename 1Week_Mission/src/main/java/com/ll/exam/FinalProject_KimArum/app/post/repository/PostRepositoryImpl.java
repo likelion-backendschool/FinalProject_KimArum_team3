@@ -19,4 +19,14 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .orderBy(post.id.desc())
                 .fetch();
     }
+
+    @Override
+    public List<Post> findRecentByOrderByIdDesc() {
+        return jpaQueryFactory
+                .select(post)
+                .from(post)
+                .orderBy(post.id.desc())
+                .limit(100)
+                .fetch();
+    }
 }
