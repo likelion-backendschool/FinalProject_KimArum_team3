@@ -13,11 +13,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -84,5 +87,29 @@ public class MemberController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         return "redirect:/member/profile";
+    }
+
+    @PreAuthorize("isAnonymous()")
+    @GetMapping("/findUsername")
+    public String showFindUserName(){
+        return "member/findUserName";
+    }
+
+    @PreAuthorize("isAnonymous()")
+    @PostMapping("/findUsername")
+    public String findUserName(@RequestParam String email, Model model){
+        Optional<Member> member = memberService.findByEmail(email);
+        String username = "존재하지 않는 회원정보입니다.";
+
+        if(member.isPresent()){
+            username = member.get().getUsername();
+        }
+
+        System.out.println(username);
+
+        model.addAttribute("email", email);
+        model.addAttribute("username", username);
+
+        return "/member/findUsername";
     }
 }
