@@ -21,11 +21,18 @@ public class MemberService {
             throw new AlreadyJoinException();
         }
 
+        int authLevel = 3;
+
+        if(nickname!=null){
+            authLevel = 7;
+        }
+
         Member member = Member.builder()
                 .username(username)
                 .password(passwordEncoder.encode(password))
                 .email(email)
                 .nickname(nickname)
+                .authLevel(authLevel)
                 .build();
 
         memberRepository.save(member);
@@ -41,6 +48,13 @@ public class MemberService {
     public void modify(Member member, String email, String nickname) {
         member.setEmail(email);
         member.setNickname(nickname);
+
+        if(nickname != null){
+            member.setAuthLevel(7);
+        }
+        else {
+            member.setAuthLevel(3);
+        }
 
         memberRepository.save(member);
     }

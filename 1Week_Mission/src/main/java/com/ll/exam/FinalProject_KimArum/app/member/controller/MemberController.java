@@ -34,10 +34,15 @@ public class MemberController {
     @PreAuthorize("isAnonymous()")
     @PostMapping("/join")
     public String join(@Valid JoinForm joinForm){
+        String nickname = joinForm.getNickname();
+        if(nickname == ""){
+            nickname = null;
+        }
+
         memberService.join(joinForm.getUsername(),
                 joinForm.getPassword(),
                 joinForm.getEmail(),
-                joinForm.getNickname());
+                nickname);
 
         return "redirect:/member/login?msg=" + Util.url.encode("회원가입이 완료되었습니다.");
     }
@@ -65,7 +70,12 @@ public class MemberController {
     public String modify(@AuthenticationPrincipal MemberContext context, @Valid ModifyForm modifyForm){
         Member member = memberService.findByUsername(modifyForm.getUsername()).get();
 
-        memberService.modify(member, modifyForm.getEmail(), modifyForm.getNickname());
+        String nickname = modifyForm.getNickname();
+        if(nickname == ""){
+            nickname = null;
+        }
+
+        memberService.modify(member, modifyForm.getEmail(), nickname);
 
         context.setUpdateDate(member.getUpdateDate());
         context.setEmail(member.getEmail());

@@ -24,7 +24,12 @@ public class CustomUserDetailsService implements UserDetailsService {
         Member member = memberRepository.findByUsername(username).get();
 
         List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("MEMBER"));
+        if (member.getAuthLevel() == 3){
+            authorities.add(new SimpleGrantedAuthority("MEMBER"));
+        }
+        else if(member.getAuthLevel() == 3){
+            authorities.add(new SimpleGrantedAuthority("AUTHOR"));
+        }
 
         return new MemberContext(member, authorities);
     }
