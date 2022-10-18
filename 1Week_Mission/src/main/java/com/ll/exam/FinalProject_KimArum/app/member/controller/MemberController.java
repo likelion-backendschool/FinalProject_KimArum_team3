@@ -1,10 +1,14 @@
 package com.ll.exam.FinalProject_KimArum.app.member.controller;
 
+import com.ll.exam.FinalProject_KimArum.app.member.entity.Member;
 import com.ll.exam.FinalProject_KimArum.app.member.form.JoinForm;
+import com.ll.exam.FinalProject_KimArum.app.member.form.ModifyForm;
 import com.ll.exam.FinalProject_KimArum.app.member.service.MemberService;
+import com.ll.exam.FinalProject_KimArum.app.secutiry.dto.MemberContext;
 import com.ll.exam.FinalProject_KimArum.util.Util;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,5 +49,21 @@ public class MemberController {
     @GetMapping("/profile")
     public String showProfile(){
         return "member/profile";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/modify")
+    public String showModify(){
+        return "member/modify";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/modify")
+    public String modify(@AuthenticationPrincipal MemberContext context, @Valid ModifyForm modifyForm){
+        Member member = memberService.findByUsername(modifyForm.getUsername()).get();
+
+        memberService.modify(member, modifyForm.getEmail(), modifyForm.getNickname());
+
+        return "redirect:/member/profile";
     }
 }
