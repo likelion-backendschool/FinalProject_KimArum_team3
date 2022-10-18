@@ -99,13 +99,12 @@ public class MemberController {
     @PostMapping("/findUsername")
     public String findUserName(@RequestParam String email, Model model){
         Optional<Member> member = memberService.findByEmail(email);
-        String username = "존재하지 않는 회원정보입니다.";
 
-        if(member.isPresent()){
-            username = member.get().getUsername();
+        if(member.isEmpty()){
+            return "redirect:/member/findUsername?errorMsg=" + Util.url.encode("존재하지 않는 회원정보입니다.");
         }
 
-        System.out.println(username);
+        String username = member.get().getUsername();
 
         model.addAttribute("email", email);
         model.addAttribute("username", username);
