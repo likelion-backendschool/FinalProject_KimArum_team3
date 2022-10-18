@@ -50,4 +50,9 @@ public class PostService {
     public List<Post> getPosts() {
         return postRepository.findAllByOrderByIdDesc();
     }
+
+    public void delete(long id) {
+        Post post = postRepository.findPostById(id).orElse(null);
+        postRepository.delete(post);
+    }
 }
