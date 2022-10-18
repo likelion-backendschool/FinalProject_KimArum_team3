@@ -24,8 +24,8 @@
                     수정일 : <span class="ml-[2px] hidden sm:block" th:text="${post.updateDate}"></span>
                 </div>
                 <div class="mt-2">
-                    <a href="/post/${article.id}/modify" class="btn btn-secondary btn-outline btn-sm">수정</a>
-                    <a onclick="if ( !confirm('정말로 삭제하시겠습니까?') ) return false;" href="/post/${article.id}/delete" class="btn btn-secondary btn-outline btn-sm">삭제</a>
+                    <a href="/post/${post.id}/modify" class="btn btn-secondary btn-outline btn-sm" sec:authorize="isAuthenticated()">수정</a>
+                    <a onclick="if ( !confirm('정말로 삭제하시겠습니까?') ) return false;" th:href="@{|/post/${post.id}/delete|}" class="btn btn-secondary btn-outline btn-sm" sec:authorize="isAuthenticated()">삭제</a>
                 </div>
                 <hr class="mt-2">
                 <div>

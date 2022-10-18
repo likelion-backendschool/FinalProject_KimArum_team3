@@ -1,9 +1,12 @@
 package com.ll.exam.FinalProject_KimArum.app.post.controller;
 
+import com.ll.exam.FinalProject_KimArum.app.member.entity.Member;
+import com.ll.exam.FinalProject_KimArum.app.member.service.MemberService;
 import com.ll.exam.FinalProject_KimArum.app.post.entity.Post;
 import com.ll.exam.FinalProject_KimArum.app.post.form.PostForm;
 import com.ll.exam.FinalProject_KimArum.app.post.service.PostService;
 import com.ll.exam.FinalProject_KimArum.app.secutiry.dto.MemberContext;
+import com.ll.exam.FinalProject_KimArum.util.Util;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,6 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
+    private final MemberService memberService;
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/write")
@@ -53,5 +57,25 @@ public class PostController {
         model.addAttribute("posts", posts);
 
         return "post/list";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/{id}/delete")
+    public String deleteBoard(@AuthenticationPrincipal MemberContext memberContext, @PathVariable Long id) {
+        Post post = postService.getPostById(id);
+
+        if(post == null) {
+            return "redirect:/post/"+id+"?errorMsg=" + Util.url.encode("해당 게시글이 존재하지 않습니다.");
+        }
+
+        Member member = memberService.findByUsername(memberContext.getUsername()).get();
+
+        if(post.getAuthor().getId() != member.getId()) {
+            return "redirect:/post/"+id+"?errorMsg=" + Util.url.encode("본인이 작성하지 않은 글입니다.");
+        }
+
+        postService.delete(id);
+
+        return "redirect:/post/list";
     }
 }
