@@ -1,6 +1,7 @@
 package com.ll.exam.FinalProject_KimArum;
 
 import com.ll.exam.FinalProject_KimArum.app.member.controller.MemberController;
+import com.ll.exam.FinalProject_KimArum.app.member.entity.Member;
 import com.ll.exam.FinalProject_KimArum.app.member.service.MemberService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -132,10 +133,13 @@ public class MemberTests {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(handler().handlerType(MemberController.class))
                 .andExpect(handler().methodName("modify"))
-                .andExpect(redirectedUrl("/member/profile"))
-                .andExpect(content().string("user1@test2.com"))
-                .andExpect(content().string("햄스터"));
+                .andExpect(redirectedUrl("/member/profile"));
 
         assertThat(memberService.findByUsername("user1").isPresent()).isTrue();
+
+        Member u1 = memberService.findByUsername("user1").get();
+
+        assertThat(u1.getEmail()).isEqualTo("user1@test2.com");
+        assertThat(u1.getNickname()).isEqualTo("햄스터");
     }
 }
