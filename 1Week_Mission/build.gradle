@@ -33,6 +33,9 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 
 	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.1.0'
+
+	//마크다운 html 렌더링
+	implementation 'org.commonmark:commonmark:0.17.2'
 }
 
 tasks.named('test') {

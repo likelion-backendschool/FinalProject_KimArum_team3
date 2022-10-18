@@ -29,7 +29,8 @@ public class PostController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/write")
     public String writePost(@AuthenticationPrincipal MemberContext memberContext, @Valid PostForm postForm) {
-        Post post = postService.writePost(memberContext.getId(), postForm.getSubject(), postForm.getContent());
+        String htmlContent = postService.markdownToHtml(postForm.getContent());
+        Post post = postService.writePost(memberContext.getId(), postForm.getSubject(), postForm.getContent(), htmlContent);
 
         return "redirect:/";
     }
