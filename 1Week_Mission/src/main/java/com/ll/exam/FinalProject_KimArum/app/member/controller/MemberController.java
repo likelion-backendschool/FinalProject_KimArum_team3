@@ -37,15 +37,9 @@ public class MemberController {
     @PreAuthorize("isAnonymous()")
     @PostMapping("/join")
     public String join(@Valid JoinForm joinForm){
-        String nickname = joinForm.getNickname();
-        if(nickname == ""){
-            nickname = null;
-        }
-
         memberService.join(joinForm.getUsername(),
                 joinForm.getPassword(),
-                joinForm.getEmail(),
-                nickname);
+                joinForm.getEmail());
 
         return "redirect:/member/login?msg=" + Util.url.encode("회원가입이 완료되었습니다.");
     }

@@ -1,7 +1,6 @@
 package com.ll.exam.FinalProject_KimArum.app.member.form;
 
 import lombok.Data;
-import org.springframework.lang.Nullable;
 
 import javax.validation.constraints.NotEmpty;
 
@@ -13,6 +12,5 @@ public class JoinForm {
     private String password;
     @NotEmpty
     private String email;
-    @Nullable
-    private String nickname;
+
 }
