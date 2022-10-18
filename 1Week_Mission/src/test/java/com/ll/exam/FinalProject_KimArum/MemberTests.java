@@ -58,7 +58,7 @@ public class MemberTests {
                         .param("password", "1234")
                         .param("passwordConfirm", "1234")
                         .param("email", "user999@test.com")
-                        .param("nickname", "hamster1")
+                        .param("nickname", "hamster999")
                 )
                 .andDo(print());
 
@@ -79,10 +79,10 @@ public class MemberTests {
         ResultActions resultActions = mvc
                 .perform(post("/member/join")
                         .with(csrf())
-                        .param("username", "user999")
+                        .param("username", "user99")
                         .param("password", "1234")
                         .param("passwordConfirm", "1234")
-                        .param("email", "user999@test.com")
+                        .param("email", "user99@test.com")
                 )
                 .andDo(print());
 
@@ -93,7 +93,7 @@ public class MemberTests {
                 .andExpect(handler().methodName("join"))
                 .andExpect(redirectedUrlPattern("/member/login?msg=**"));
 
-        assertThat(memberService.findByUsername("user999").isPresent()).isTrue();
+        assertThat(memberService.findByUsername("user99").isPresent()).isTrue();
     }
 
     @Test
