@@ -29,6 +29,7 @@ public class Member extends BaseEntity {
     private String nickname;
     private String email;
     private boolean emailVerified;
+    private int authLevel;
 
     public String getName() {
         return username;
