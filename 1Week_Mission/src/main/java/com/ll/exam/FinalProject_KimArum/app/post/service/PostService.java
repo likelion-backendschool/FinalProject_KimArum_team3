@@ -32,7 +32,7 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public Optional<Post> findBySubject(String subject) {
-        return postRepository.findBySubject(subject);
+        return postRepository.findPostBySubject(subject);
     }
 
     public String markdownToHtml(String markdown) {
@@ -40,5 +40,9 @@ public class PostService {
         Node document = parser.parse(markdown);
         HtmlRenderer renderer = HtmlRenderer.builder().build();
         return renderer.render(document);
+    }
+
+    public Post getPostById(Long id) {
+        return postRepository.findPostById(id).orElse(null);
     }
 }

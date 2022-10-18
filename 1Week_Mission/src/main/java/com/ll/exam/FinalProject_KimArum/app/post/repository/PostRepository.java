@@ -8,5 +8,7 @@ import java.util.Optional;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
-    Optional<Post> findBySubject(String subject);
+    Optional<Post> findPostBySubject(String subject);
+
+    Optional<Post> findPostById(Long id);
 }
