@@ -59,4 +59,12 @@ public class PostService {
         Post post = postRepository.findPostById(id).orElse(null);
         postRepository.delete(post);
     }
+
+    public void modify(Post post, String subject, String content, String htmlContent) {
+        post.setSubject(subject);
+        post.setContent(content);
+        post.setContentHtml(htmlContent);
+
+        postRepository.save(post);
+    }
 }

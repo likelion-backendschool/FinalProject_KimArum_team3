@@ -70,12 +70,44 @@ public class PostController {
 
         Member member = memberService.findByUsername(memberContext.getUsername()).get();
 
-        if(post.getAuthor().getId() != member.getId()) {
+        if (memberContext.memberIsNot(post.getAuthor())) {
             return "redirect:/post/"+id+"?errorMsg=" + Util.url.encode("본인이 작성하지 않은 글입니다.");
         }
 
         postService.delete(id);
 
         return "redirect:/post/list";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/{id}/modify")
+    public String showModify(@AuthenticationPrincipal MemberContext memberContext, Model model, @PathVariable Long id) {
+        Post post = postService.getPostById(id);
+
+        if(post == null) {
+            return "redirect:/post/"+id+"?errorMsg=" + Util.url.encode("해당 게시글이 존재하지 않습니다.");
+        }
+
+        if (memberContext.memberIsNot(post.getAuthor())) {
+            return "redirect:/post/"+id+"?errorMsg=" + Util.url.encode("본인이 작성하지 않은 글입니다.");
+        }
+
+        model.addAttribute("post", post);
+
+        return "post/modify";
+    }
+
+    @PostMapping("/{id}/modify")
+    public String modify(@AuthenticationPrincipal MemberContext memberContext, Model model, @PathVariable Long id, @Valid PostForm postForm) {
+        Post post = postService.getPostById(id);
+
+        if (memberContext.memberIsNot(post.getAuthor())) {
+            return "redirect:/post/"+id+"?errorMsg=" + Util.url.encode("본인이 작성하지 않은 글입니다.");
+        }
+
+        String htmlContent = postService.markdownToHtml(postForm.getContent());
+        postService.modify(post, postForm.getSubject(), postForm.getContent(), htmlContent);
+
+        return "redirect:/post/"+id+"?msg=" + Util.url.encode("게시글이 수정되었습니다.");
     }
 }
