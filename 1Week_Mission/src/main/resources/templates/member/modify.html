@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/layout.html}">
+
+<head>
+    <title>회원가입</title>
+</head>
+
+<body>
+<main layout:fragment="main">
+    <section class="section section-join flex-grow flex flex-col items-center justify-center">
+
+        <div class="max-w-md w-full px-2 pt-4">
+            <h1 class="font-bold text-lg">회원 정보 수정</h1>
+
+            <script>
+                let MemberModify__submitDone = false;
+
+                function MemberModify__submit(form) {
+                    if (MemberModify__submitDone) {
+                        return;
+                    }
+
+                    form.username.value = form.username.value.trim();
+
+                    if (form.username.value.length == 0) {
+                        warningModal("로그인아이디를 입력해주세요.");
+                        form.username.focus();
+
+                        return;
+                    }
+
+                    form.email.value = form.email.value.trim();
+
+                    if (form.email.value.length == 0) {
+                        warningModal("이메일을 입력해주세요.");
+                        form.email.focus();
+
+                        return;
+                    }
+
+                    form.submit();
+                    MemberModify__submitDone = true;
+                }
+            </script>
+
+
+            <form th:action method="POST" class="flex flex-col gap-3"
+                  onsubmit="MemberModify__submit(this); return false;">
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">아이디</span>
+                    </label>
+                    <input autofocus type="text" name="username" th:value="${#authentication.principal.username}" class="input input-bordered"
+                           maxlength="50" readonly>
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">이메일</span>
+                    </label>
+                    <input type="email" name="email" th:value="${#authentication.principal.email}" class="input input-bordered" maxlength="50">
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">닉네임</span>
+                    </label>
+                    <input type="text" name="nickname" th:value="${#authentication.principal.nickname}" class="input input-bordered" maxlength="50">
+                </div>
+
+                <div class="mt-2">
+                    <input class="btn btn-primary" type="submit" value="수정하기">
+                </div>
+            </form>
+        </div>
+
+        </div>
+    </section>
+
+</main>
+</body>
+</html>
