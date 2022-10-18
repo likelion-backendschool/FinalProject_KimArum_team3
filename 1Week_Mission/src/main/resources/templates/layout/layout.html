@@ -27,6 +27,9 @@
 
     <!-- 테일윈드 -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Toast UI Editor -->
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
 </head>
 
 <body class="min-h-screen flex flex-col pt-[35px]">
@@ -36,6 +39,9 @@
 
 <!-- common.css -->
 <link href="/common/common.css" rel="stylesheet" type="text/css"/>
+
+<!-- Toast UI Editor js -->
+<script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
 
 <header class="fixed z-40 top-0 left-0 w-full bg-white border-b-[1px] border-b-[color:#efefef] h-[35px]">
     <div class="container mx-auto h-full flex items-center px-2">
@@ -68,6 +74,12 @@
                 <i class="fa-solid fa-user"></i>
                 <span class="ml-[2px] hidden sm:block">
                     프로파일
+                </span>
+            </a>
+            <a href="/post/write" class="inline-flex" sec:authorize="isAuthenticated()">
+                <i class="fa-solid fa-user"></i>
+                <span class="ml-[2px] hidden sm:block">
+                    글쓰기
                 </span>
             </a>
         </div>
