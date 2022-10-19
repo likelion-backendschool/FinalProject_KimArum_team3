@@ -27,8 +27,8 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (member.getAuthLevel() == 3){
             authorities.add(new SimpleGrantedAuthority("MEMBER"));
         }
-        else if(member.getAuthLevel() == 3){
-            authorities.add(new SimpleGrantedAuthority("AUTHOR"));
+        else if(member.getAuthLevel() == 7){
+            authorities.add(new SimpleGrantedAuthority("ADMIN"));
         }
 
         return new MemberContext(member, authorities);

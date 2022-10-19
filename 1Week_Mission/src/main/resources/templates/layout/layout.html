@@ -76,7 +76,7 @@
                     프로파일
                 </span>
             </a>
-            <a href="/post/write" class="inline-flex" sec:authorize="isAuthenticated()">
+            <a href="/post/write" class="inline-flex" sec:authorize="hasAuthority('ADMIN')">
                 <i class="fa-solid fa-user"></i>
                 <span class="ml-[2px] hidden sm:block">
                     글쓰기
