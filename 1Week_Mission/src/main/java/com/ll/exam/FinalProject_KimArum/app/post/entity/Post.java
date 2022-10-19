@@ -63,7 +63,7 @@ public class Post extends BaseEntity {
                 .stream()
                 .map(hashTag -> {
                     String text = "#" + hashTag.getKeyword().getContent();
-                    System.out.println(hashTag.getKeyword().getListUrl());
+
                     return """
                             <a href="%s" class="tagName" class="ml-2">%s</a>
                             """
