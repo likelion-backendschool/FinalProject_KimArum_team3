@@ -17,8 +17,13 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
+    private final PostHashTagService postHashTagService;
 
     public Post writePost(Long authorId, String subject, String content, String htmlContent) {
+        return writePost(authorId, subject, content, htmlContent, "");
+    }
+
+    public Post writePost(Long authorId, String subject, String content, String htmlContent, String hashTagsStr) {
         Post post = Post.builder()
                 .author(new Member(authorId))
                 .subject(subject)
@@ -27,6 +32,8 @@ public class PostService {
                 .build();
 
         postRepository.save(post);
+
+        postHashTagService.applyHashTags(post, hashTagsStr);
 
         return post;
     }

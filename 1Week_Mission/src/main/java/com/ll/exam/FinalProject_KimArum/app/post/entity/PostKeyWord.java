@@ -14,6 +14,6 @@ import javax.persistence.Entity;
 @NoArgsConstructor
 @SuperBuilder
 @ToString(callSuper = true)
-public class PostKeyWord extends BaseEntity {
+public class PostKeyword extends BaseEntity {
     private String content;
 }
