@@ -48,6 +48,8 @@
 - 원활한 이용을 위해 오류는 최대한 warningModal로 해결
 - 닉네임 유무에 따라 authLevel 설정
 
+<br/>
+
 #### 1. Member 회원 가입, 정보 수정, 아이디 찾기  
 - 회원가입 시 닉네임 정보를 입력할 수 있는 input을 설정하였으나 초기 회원가입 시 모든 회원은
 일반 회원이라는 요구사항에 맞게 닉네임 정보 입력을 삭제  
@@ -56,14 +58,18 @@
 - 회원정보 수정 페이지에서 닉네임을 입력하면 작가 회원으로 권한 변경
   
   - 회원정보 modify 단계에서 nickname이 "" 이거나 null이면 authLevel=3 / nickname이 빈 문자열이 아니면 authLevel=7이 되도록 구현
-<br/>
+
 - 로그인/로그아웃 기능은 Spring Security를 이용해 SecurityConfig에서 구현
+
+<br/>
 
 #### 2. 글 CURD
 - 초기에는 회원의 authLevel, 해시태그 관계 없이 글쓰기 가능하도록 구현
 
   - 글쓰기 버튼에 ```hasAuthority('ADMIN')``` 옵션을 주어 관리자 권한 회원만 버튼을 볼 수 있도록 변경
   - PostHashTag, PostKeyword 추가하여 해시태그 기능 구현
+
+<br/>
 
 > 📌 메인 페이지에서 리스트가 만들어지지 않는 문제
 > 
@@ -86,10 +92,10 @@
 > 
 원인 : 1:N 관계로 연결되어 있는 PostHashTag 테이블에서 참조 중인 외래키로 인해 테이블 삭제 또는 변경 불가능  
 
-해결: 부모 entity인 Post entity에 @OneToMany 컬럼 추가 후 ```mappedBy, casecase``` 옵션 설정 
-![img.jpg](/img/img.png)
+해결: 부모 entity인 Post entity에 @OneToMany 컬럼 추가 후 ```mappedBy, casecase``` 옵션 설정   
+![img.jpg](img/img.png)
 
-
+<br/>
 
 ### [특이사항]
 
