@@ -37,7 +37,7 @@ public class PostController {
     @PostMapping("/write")
     public String writePost(@AuthenticationPrincipal MemberContext memberContext, @Valid PostForm postForm) {
         String htmlContent = postService.markdownToHtml(postForm.getContent());
-        Post post = postService.writePost(memberContext.getId(), postForm.getSubject(), postForm.getContent(), htmlContent);
+        Post post = postService.writePost(memberContext.getId(), postForm.getSubject(), postForm.getContent(), htmlContent, postForm.getHashTagContents());
 
         return "redirect:/post/list";
     }

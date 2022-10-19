@@ -19,10 +19,10 @@ public class PostHashTagService {
     private final PostHashTagRepository postHashTagRepository;
     private final PostKeywordService postKeywordService;
 
-    public void applyHashTags(Post post, String keywordContentsStr) {
+    public void applyHashTags(Post post, String hashTagContents) {
         List<PostHashTag> oldHashTags = getHashTags(post);
 
-        List<String> keywordContents = Arrays.stream(keywordContentsStr.split("#"))
+        List<String> keywordContents = Arrays.stream(hashTagContents.split("#"))
                 .map(String::trim)
                 .filter(s -> s.length() > 0)
                 .collect(Collectors.toList());
