@@ -37,6 +37,14 @@ public class MemberController {
     @PreAuthorize("isAnonymous()")
     @PostMapping("/join")
     public String join(@Valid JoinForm joinForm){
+        if(memberService.findByUsername(joinForm.getUsername()).isPresent()) {
+            return "redirect:/member/join?errorMsg=" + Util.url.encode("이미 사용 중인 아이디입니다.");
+        }
+
+        if(memberService.findByEmail(joinForm.getEmail()).isPresent()) {
+            return "redirect:/member/join?errorMsg=" + Util.url.encode("이미 사용 중인 이메일입니다.");
+        }
+
         memberService.join(joinForm.getUsername(),
                 joinForm.getPassword(),
                 joinForm.getEmail());
@@ -70,6 +78,9 @@ public class MemberController {
         String nickname = modifyForm.getNickname();
         if(nickname == ""){
             nickname = null;
+        }
+        else if(memberService.findByNickname(modifyForm.getNickname()).isPresent()) {
+            return "redirect:/member/modify?errorMsg=" + Util.url.encode("이미 사용 중인 닉네임입니다.");
         }
 
         memberService.modify(member, modifyForm.getEmail(), nickname);
