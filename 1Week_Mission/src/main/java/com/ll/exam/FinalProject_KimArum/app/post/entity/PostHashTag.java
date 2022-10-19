@@ -18,5 +18,5 @@ public class PostHashTag extends BaseEntity {
     @ManyToOne
     private Post post;
     @ManyToOne
-    private PostKeyWord keyword;
+    private PostKeyword keyword;
 }
