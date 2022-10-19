@@ -1,6 +1,9 @@
 package com.ll.exam.FinalProject_KimArum;
 
 import com.ll.exam.FinalProject_KimArum.app.post.controller.PostController;
+import com.ll.exam.FinalProject_KimArum.app.post.entity.Post;
+import com.ll.exam.FinalProject_KimArum.app.post.entity.PostHashTag;
+import com.ll.exam.FinalProject_KimArum.app.post.service.PostHashTagService;
 import com.ll.exam.FinalProject_KimArum.app.post.service.PostService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,6 +15,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -29,6 +34,9 @@ public class PostTests {
 
     @Autowired
     private PostService postService;
+
+    @Autowired
+    private PostHashTagService postHashTagService;
 
     @Test
     @DisplayName("게시글 등록")
@@ -51,5 +59,14 @@ public class PostTests {
                 .andExpect(redirectedUrl("/"));
 
         assertThat(postService.findBySubject("hello").isPresent()).isTrue();
+    }
+
+    @Test
+    @DisplayName("1번 게시물에는 키워드가 2개 존재한다.")
+    void t2() {
+        Post post = postService.getPostById(1L);
+        List<PostHashTag> hashTags = postHashTagService.getHashTags(post);
+
+        assertThat(hashTags.size()).isEqualTo(2);
     }
 }
