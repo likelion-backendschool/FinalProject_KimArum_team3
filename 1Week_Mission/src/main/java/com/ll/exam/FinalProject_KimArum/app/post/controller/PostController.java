@@ -62,7 +62,7 @@ public class PostController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{id}/delete")
-    public String deleteBoard(@AuthenticationPrincipal MemberContext memberContext, @PathVariable Long id) {
+    public String deletePost(@AuthenticationPrincipal MemberContext memberContext, @PathVariable Long id) {
         Post post = postService.getPostById(id);
 
         if(post == null) {
