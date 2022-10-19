@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -62,11 +63,20 @@ public class PostTests {
     }
 
     @Test
-    @DisplayName("1번 게시물에는 키워드가 2개 존재한다.")
+    @DisplayName("1번 게시물에는 해시태그가 2개 존재한다.")
     void t2() {
         Post post = postService.getPostById(1L);
         List<PostHashTag> hashTags = postHashTagService.getHashTags(post);
 
         assertThat(hashTags.size()).isEqualTo(2);
+    }
+
+    @Test
+    @DisplayName("1번 게시물의 해시태그를 수정하면, 기존 해시태그 중 몇개는 지워질 수 있다.")
+    @Rollback(false)
+    void t3() {
+        String keywordContentsStr = "#태그1 #태그4";
+        Post post = postService.getPostById(1L);
+        postHashTagService.applyHashTags(post, keywordContentsStr);
     }
 }

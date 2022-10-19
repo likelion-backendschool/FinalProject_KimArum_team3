@@ -7,6 +7,7 @@ import com.ll.exam.FinalProject_KimArum.app.post.repository.PostHashTagRepositor
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -19,10 +20,26 @@ public class PostHashTagService {
     private final PostKeywordService postKeywordService;
 
     public void applyHashTags(Post post, String keywordContentsStr) {
+        List<PostHashTag> oldHashTags = getHashTags(post);
+
         List<String> keywordContents = Arrays.stream(keywordContentsStr.split("#"))
                 .map(String::trim)
                 .filter(s -> s.length() > 0)
                 .collect(Collectors.toList());
+
+        List<PostHashTag> needToDelete = new ArrayList<>();
+
+        for (PostHashTag oldHashTag : oldHashTags) {
+            boolean contains = keywordContents.stream().anyMatch(s -> s.equals(oldHashTag.getKeyword().getContent()));
+
+            if (contains == false) {
+                needToDelete.add(oldHashTag);
+            }
+        }
+
+        needToDelete.forEach(hashTag -> {
+            postHashTagRepository.delete(hashTag);
+        });
 
         keywordContents.forEach(keywordContent -> {
             savePostHashTag(post, keywordContent);
