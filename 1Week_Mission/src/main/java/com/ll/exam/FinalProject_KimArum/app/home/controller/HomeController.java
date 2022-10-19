@@ -17,6 +17,9 @@ public class HomeController {
     @GetMapping("/")
     public String showMain(Model model) {
         List<Post> posts = postService.getRecentPosts();
+
+        postService.loadForPrintData(posts);
+
         model.addAttribute("posts", posts);
 
         return "/post/list";

@@ -68,4 +68,8 @@ public class PostHashTagService {
     public List<PostHashTag> getHashTags(Post post) {
         return postHashTagRepository.findAllByPostId(post.getId());
     }
+
+    public List<PostHashTag> getHashTagsByArticleIdIn(long[] ids) {
+        return postHashTagRepository.findAllByPostIdIn(ids);
+    }
 }
