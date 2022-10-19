@@ -26,11 +26,7 @@
                 <div class="mt-2 flex">
                     <i class="fa-solid fa-tag mr-2"></i>
                     해시태그 :
-                    <th:block th:each="hashTag : ${post.extra.hashTags}">
-                        <a th:href="@{${hashTag.keyword.listUrl}}" class="ml-2">
-                            #[[${hashTag.keyword.content}]]
-                        </a>
-                    </th:block>
+                    <th:block th:utext="${post.extra_hashTagLinks}" class="ml-2 bg-red"/>
                 </div>
                 <div class="mt-2">
                     <a th:href="@{|/post/${post.id}/modify|}" class="btn btn-secondary btn-outline btn-sm" sec:authorize="isAuthenticated()">수정</a>
