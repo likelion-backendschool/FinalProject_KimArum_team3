@@ -79,4 +79,12 @@ public class PostTests {
         Post post = postService.getPostById(1L);
         postHashTagService.applyHashTags(post, keywordContentsStr);
     }
+
+    @Test
+    @DisplayName("해시태그 태그2와 관련된 모든 게시물 조회")
+    void t4() {
+        List<Post> articles = postService.search("hashTag", "자바");
+
+        assertThat(articles.size()).isEqualTo(1);
+    }
 }
