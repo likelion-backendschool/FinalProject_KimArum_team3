@@ -24,7 +24,7 @@ public class PostService {
         return writePost(authorId, subject, content, htmlContent, "");
     }
 
-    public Post writePost(Long authorId, String subject, String content, String htmlContent, String hashTagsStr) {
+    public Post writePost(Long authorId, String subject, String content, String htmlContent, String hashTagContents) {
         Post post = Post.builder()
                 .author(new Member(authorId))
                 .subject(subject)
@@ -34,7 +34,7 @@ public class PostService {
 
         postRepository.save(post);
 
-        postHashTagService.applyHashTags(post, hashTagsStr);
+        postHashTagService.applyHashTags(post, hashTagContents);
 
         return post;
     }
