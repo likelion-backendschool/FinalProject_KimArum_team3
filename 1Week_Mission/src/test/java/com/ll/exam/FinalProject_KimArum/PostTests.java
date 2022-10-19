@@ -81,9 +81,9 @@ public class PostTests {
     }
 
     @Test
-    @DisplayName("해시태그 태그2와 관련된 모든 게시물 조회")
+    @DisplayName("해시태그 태그1과 관련된 모든 게시물 조회")
     void t4() {
-        List<Post> articles = postService.search("hashTag", "자바");
+        List<Post> articles = postService.search("hashTag", "태그1");
 
         assertThat(articles.size()).isEqualTo(1);
     }

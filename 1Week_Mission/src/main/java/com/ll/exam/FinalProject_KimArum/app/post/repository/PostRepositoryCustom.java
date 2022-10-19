@@ -8,4 +8,6 @@ public interface PostRepositoryCustom {
     List<Post> findAllByOrderByIdDesc();
 
     List<Post> findRecentByOrderByIdDesc();
+
+    List<Post> searchQsl(String kwType, String kw);
 }
