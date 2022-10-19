@@ -106,7 +106,7 @@ public class PostController {
         }
 
         String htmlContent = postService.markdownToHtml(postForm.getContent());
-        postService.modify(post, postForm.getSubject(), postForm.getContent(), htmlContent);
+        postService.modify(post, postForm.getSubject(), postForm.getContent(), htmlContent, postForm.getHashTagContents());
 
         return "redirect:/post/"+id+"?msg=" + Util.url.encode("게시글이 수정되었습니다.");
     }

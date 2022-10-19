@@ -19,7 +19,14 @@
                     <label class="label">
                         <span class="label-text">제목</span>
                     </label>
-                    <input name="subject" type="text" maxlength="50" th:value="${post.subject}" class="input input-bordered w-full max-w-xs" />
+                    <input name="subject" type="text" maxlength="50" th:value="${post.subject}" class="input input-bordered w-full max-w-xxl" />
+                </div>
+
+                <div>
+                    <label class="label">
+                        <span class="label-text">해시태그</span>
+                    </label>
+                    <input type="text" name="hashTagContents" placeholder="#태그1 #태그2" th:value="${post.extra_inputValue_hashTagContents}" class="input input-bordered w-full max-w-xxl"/>
                 </div>
 
                 <div class="form-control">

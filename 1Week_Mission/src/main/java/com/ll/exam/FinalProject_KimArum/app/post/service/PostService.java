@@ -73,11 +73,12 @@ public class PostService {
         postRepository.delete(post);
     }
 
-    public void modify(Post post, String subject, String content, String htmlContent) {
+    public void modify(Post post, String subject, String content, String htmlContent, String hashTagContents) {
         post.setSubject(subject);
         post.setContent(content);
         post.setContentHtml(htmlContent);
 
         postRepository.save(post);
+        postHashTagService.applyHashTags(post, hashTagContents);
     }
 }
