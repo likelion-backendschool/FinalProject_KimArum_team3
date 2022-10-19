@@ -54,6 +54,9 @@ public class PostController {
     @GetMapping("/list")
     public String showList(Model model) {
         List<Post> posts = postService.getPosts();
+
+        postService.loadForPrintData(posts);
+
         model.addAttribute("posts", posts);
 
         return "post/list";
