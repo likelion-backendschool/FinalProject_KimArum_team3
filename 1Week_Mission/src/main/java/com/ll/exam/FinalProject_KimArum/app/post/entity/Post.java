@@ -39,11 +39,38 @@ public class Post extends BaseEntity {
             return "";
         }
 
-        return "#" + hashTags
+        return hashTags
                 .stream()
-                .map(hashTag -> hashTag.getKeyword().getContent())
+                .map(hashTag -> "#" + hashTag.getKeyword().getContent())
                 .sorted()
-                .collect(Collectors.joining(" #"))
-                .trim();
+                .collect(Collectors.joining(" "));
+    }
+
+    public String getExtra_hashTagLinks() {
+        Map<String, Object> extra = getExtra();
+
+        if (extra.containsKey("hashTags") == false) {
+            return "";
+        }
+
+        List<PostHashTag> hashTags = (List<PostHashTag>) extra.get("hashTags");
+
+        if (hashTags.isEmpty()) {
+            return "";
+        }
+
+        return hashTags
+                .stream()
+                .map(hashTag -> {
+                    String text = "#" + hashTag.getKeyword().getContent();
+                    System.out.println(hashTag.getKeyword().getListUrl());
+                    return """
+                            <a href="%s" class="ml-2">%s</a>
+                            """
+                            .stripIndent()
+                            .formatted(hashTag.getKeyword().getListUrl(), text);
+                })
+                .sorted()
+                .collect(Collectors.joining(" "));
     }
 }
