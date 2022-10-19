@@ -81,4 +81,8 @@ public class PostService {
         postRepository.save(post);
         postHashTagService.applyHashTags(post, hashTagContents);
     }
+
+    public List<Post> search(String kwType, String kw) {
+        return postRepository.searchQsl(kwType, kw);
+    }
 }
