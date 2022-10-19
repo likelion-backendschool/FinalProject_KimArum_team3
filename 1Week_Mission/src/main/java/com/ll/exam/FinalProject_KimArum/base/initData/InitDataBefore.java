@@ -10,6 +10,9 @@ public interface InitDataBefore {
         Member member1 = memberService.join("user1", "1234", "user1@test.com");
         Member member2 = memberService.join("user2", "1234", "user2@test.com");
 
+        //member1 작가회원으로
+        memberService.modify(member1, "user1@test.com", "햄스터");
+
         Post post1 = postService.writePost(member1.getId(), "1번 글", "1번 내용", "1번 내용", "#태그1 #태그2");
         Post post2 = postService.writePost(member1.getId(), "2번 글", "2번 내용", "2번 내용", "#태그2 #태그3");
     }
