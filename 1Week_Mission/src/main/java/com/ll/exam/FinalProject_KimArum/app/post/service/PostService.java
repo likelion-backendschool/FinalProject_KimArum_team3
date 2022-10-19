@@ -2,7 +2,6 @@ package com.ll.exam.FinalProject_KimArum.app.post.service;
 
 import com.ll.exam.FinalProject_KimArum.app.member.entity.Member;
 import com.ll.exam.FinalProject_KimArum.app.post.entity.Post;
-import com.ll.exam.FinalProject_KimArum.app.post.entity.PostHashTag;
 import com.ll.exam.FinalProject_KimArum.app.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.commonmark.node.Node;
@@ -52,12 +51,7 @@ public class PostService {
     }
 
     public Post getPostById(Long id) {
-        Post post = postRepository.findPostById(id).orElse(null);
-        List<PostHashTag> hashTags = postHashTagService.getHashTags(post);
-
-        post.getExtra().put("hashTags", hashTags);
-
-        return post;
+        return postRepository.findPostById(id).orElse(null);
     }
 
     public List<Post> getPosts() {
