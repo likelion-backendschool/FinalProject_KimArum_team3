@@ -61,4 +61,9 @@ public class MemberService {
 
         memberRepository.save(member);
     }
+
+    public void modifyPassword(Member member, String newPassword) {
+        member.setPassword(passwordEncoder.encode(newPassword));
+        memberRepository.save(member);
+    }
 }
