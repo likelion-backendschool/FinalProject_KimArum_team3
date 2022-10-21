@@ -3,6 +3,7 @@ package com.ll.exam.FinalProject_KimArum.app.member.controller;
 import com.ll.exam.FinalProject_KimArum.app.member.entity.Member;
 import com.ll.exam.FinalProject_KimArum.app.member.form.JoinForm;
 import com.ll.exam.FinalProject_KimArum.app.member.form.ModifyForm;
+import com.ll.exam.FinalProject_KimArum.app.member.form.ModifyPasswordForm;
 import com.ll.exam.FinalProject_KimArum.app.member.service.MemberService;
 import com.ll.exam.FinalProject_KimArum.app.secutiry.dto.MemberContext;
 import com.ll.exam.FinalProject_KimArum.util.Util;
@@ -12,6 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +29,7 @@ import java.util.Optional;
 @RequestMapping("/member")
 public class MemberController {
     private final MemberService memberService;
+    private final PasswordEncoder passwordEncoder;
 
     @PreAuthorize("isAnonymous()")
     @GetMapping("/join")
@@ -92,6 +95,33 @@ public class MemberController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         return "redirect:/member/profile";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/modifyPassword")
+    public String showModifyPassword(){
+        return "member/modifyPassword";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/modifyPassword")
+    public String modifyPassword(@AuthenticationPrincipal MemberContext context, @Valid ModifyPasswordForm modifyPasswordForm){
+        Member member = memberService.findByUsername(context.getUsername()).get();
+
+        if(passwordEncoder.matches(modifyPasswordForm.getOldPassword(), member.getPassword())==false){
+            return "redirect:/member/modifyPassword?errorMsg=" + Util.url.encode("기존 비밀번호를 다시 입력해주세요.");
+        }
+
+        if(!modifyPasswordForm.getNewPassword().equals(modifyPasswordForm.getNewPasswordConfirm())){
+            return "redirect:/member/modifyPassword?errorMsg=" + Util.url.encode("비밀번호 확인이 일치하지 않습니다.");
+        }
+
+        memberService.modifyPassword(member, modifyPasswordForm.getNewPassword());
+
+        Authentication authentication = new UsernamePasswordAuthenticationToken(context, member.getPassword(), context.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        return "redirect:/member/profile?msg=" + Util.url.encode("비밀번호가 변경되었습니다.");
     }
 
     @PreAuthorize("isAnonymous()")
