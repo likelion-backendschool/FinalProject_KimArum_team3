@@ -16,10 +16,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Optional;
@@ -33,13 +31,21 @@ public class MemberController {
 
     @PreAuthorize("isAnonymous()")
     @GetMapping("/join")
-    public String showJoin(){
+    public String showJoin(JoinForm joinForm){
         return "member/join";
     }
 
     @PreAuthorize("isAnonymous()")
     @PostMapping("/join")
-    public String join(@Valid JoinForm joinForm){
+    public String join(@Valid JoinForm joinForm, BindingResult bindingResult){
+        if (bindingResult.hasErrors()) {
+            return "member/join";
+        }
+
+        if(!joinForm.getPassword().equals(joinForm.getPasswordConfirm())){
+            return "redirect:/member/join?errorMsg=" + Util.url.encode("비밀번호가 일치하지 않습니다.");
+        }
+
         if(memberService.findByUsername(joinForm.getUsername()).isPresent()) {
             return "redirect:/member/join?errorMsg=" + Util.url.encode("이미 사용 중인 아이디입니다.");
         }
