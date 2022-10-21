@@ -14,19 +14,21 @@
         <div class="container px-3 mx-auto mt-3">
             <h1 class="font-bold text-lg">글쓰기</h1>
 
-            <form th:action method="POST" class="flex flex-col gap-3" onsubmit="PostWrite__submit(this); return false;">
+            <form th:action="@{/post/write}" th:object="${postForm}" method="POST" class="flex flex-col gap-3" onsubmit="PostWrite__submit(this); return false;">
+                <div th:replace="layout/error"></div>
+
                 <div class="form-control w-full">
                     <label class="label">
                         <span class="label-text">제목</span>
                     </label>
-                    <input name="subject" type="text" maxlength="50" placeholder="제목을 입력해주세요." class="input input-bordered w-full max-w-xs" />
+                    <input name="subject" type="text" maxlength="20" placeholder="제목을 입력해주세요." class="input input-bordered w-full max-w-xxxl" />
                 </div>
 
                 <div>
                     <label class="label">
                         <span class="label-text">해시태그</span>
                     </label>
-                    <input type="text" maxlength="50" name="hashTagContents" placeholder="#키워드1 #키워드2" class="input input-bordered w-full max-w-xs"/>
+                    <input type="text" maxlength="50" name="hashTagContents" placeholder="#키워드1 #키워드2" class="input input-bordered w-full max-w-xxl"/>
                 </div>
 
                 <div class="form-control">
