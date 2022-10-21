@@ -12,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -26,13 +27,17 @@ public class PostController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/write")
-    public String showWritePost() {
+    public String showWritePost(PostForm postForm) {
         return "post/write";
     }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/write")
-    public String writePost(@AuthenticationPrincipal MemberContext memberContext, @Valid PostForm postForm) {
+    public String writePost(@AuthenticationPrincipal MemberContext memberContext, @Valid PostForm postForm, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "post/write";
+        }
+
         String htmlContent = postService.markdownToHtml(postForm.getContent());
         Post post = postService.writePost(memberContext.getId(), postForm.getSubject(), postForm.getContent(), htmlContent, postForm.getHashTagContents());
 
@@ -82,7 +87,7 @@ public class PostController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/{id}/modify")
-    public String showModify(@AuthenticationPrincipal MemberContext memberContext, Model model, @PathVariable Long id) {
+    public String showModify(@AuthenticationPrincipal MemberContext memberContext, Model model, @PathVariable Long id, PostForm postForm) {
         Post post = postService.getPostById(id);
 
         if(post == null) {
@@ -99,8 +104,13 @@ public class PostController {
     }
 
     @PostMapping("/{id}/modify")
-    public String modify(@AuthenticationPrincipal MemberContext memberContext, Model model, @PathVariable Long id, @Valid PostForm postForm) {
+    public String modify(@AuthenticationPrincipal MemberContext memberContext, Model model, @PathVariable Long id, @Valid PostForm postForm, BindingResult bindingResult) {
         Post post = postService.getPostById(id);
+
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("post", post);
+            return "post/modify";
+        }
 
         if (memberContext.memberIsNot(post.getAuthor())) {
             return "redirect:/post/"+id+"?errorMsg=" + Util.url.encode("본인이 작성하지 않은 글입니다.");

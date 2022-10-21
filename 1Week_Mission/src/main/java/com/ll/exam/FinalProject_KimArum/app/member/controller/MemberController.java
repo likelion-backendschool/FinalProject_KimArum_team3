@@ -75,13 +75,17 @@ public class MemberController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify")
-    public String showModify(){
+    public String showModify(ModifyForm modifyForm){
         return "member/modify";
     }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify")
-    public String modify(@AuthenticationPrincipal MemberContext context, @Valid ModifyForm modifyForm){
+    public String modify(@AuthenticationPrincipal MemberContext context, @Valid ModifyForm modifyForm, BindingResult bindingResult){
+        if (bindingResult.hasErrors()) {
+            return "member/modify";
+        }
+
         Member member = memberService.findByUsername(modifyForm.getUsername()).get();
 
         String nickname = modifyForm.getNickname();
@@ -105,13 +109,17 @@ public class MemberController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modifyPassword")
-    public String showModifyPassword(){
+    public String showModifyPassword(ModifyPasswordForm modifyPasswordForm){
         return "member/modifyPassword";
     }
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modifyPassword")
-    public String modifyPassword(@AuthenticationPrincipal MemberContext context, @Valid ModifyPasswordForm modifyPasswordForm){
+    public String modifyPassword(@AuthenticationPrincipal MemberContext context, @Valid ModifyPasswordForm modifyPasswordForm, BindingResult bindingResult){
+        if (bindingResult.hasErrors()) {
+            return "member/modifyPassowrd";
+        }
+
         Member member = memberService.findByUsername(context.getUsername()).get();
 
         if(passwordEncoder.matches(modifyPasswordForm.getOldPassword(), member.getPassword())==false){

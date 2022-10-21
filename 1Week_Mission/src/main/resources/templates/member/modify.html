@@ -47,8 +47,10 @@
             </script>
 
 
-            <form th:action method="POST" class="flex flex-col gap-3"
+            <form th:action="@{/member/modify}" th:object="${modifyForm}" method="POST" class="flex flex-col gap-3"
                   onsubmit="MemberModify__submit(this); return false;">
+                <div th:replace="layout/error"></div>
+
                 <div class="form-control">
                     <label class="label">
                         <span class="label-text">아이디</span>
