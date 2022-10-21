@@ -57,6 +57,7 @@ public class PostHashTagService {
 
         PostHashTag hashTag = PostHashTag.builder()
                 .post(post)
+                .member(post.getAuthor())
                 .keyword(keyword)
                 .build();
 
