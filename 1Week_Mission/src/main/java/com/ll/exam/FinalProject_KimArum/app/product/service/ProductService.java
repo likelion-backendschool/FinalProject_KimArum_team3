@@ -14,8 +14,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
 
 @Service
 @Transactional(readOnly = true)
@@ -90,6 +93,32 @@ public class ProductService {
         return postTags
                 .stream()
                 .map(PostHashTag::getPost)
-                .collect(Collectors.toList());
+                .collect(toList());
+    }
+
+    public List<Product> search(String kwType, String kw) {
+        return productRepository.searchQsl(kwType, kw);
+    }
+
+    public void loadForPrintData(List<Product> products) {
+        long[] ids = products
+                .stream()
+                .mapToLong(Product::getId)
+                .toArray();
+
+        List<ProductTag> productTagsByProductIds = productTagService.getProductTagsByProductIdIn(ids);
+
+        Map<Long, List<ProductTag>> productTagsByProductIdMap = productTagsByProductIds.stream()
+                .collect(groupingBy(
+                        productTag -> productTag.getProduct().getId(), toList()
+                ));
+
+        products.stream().forEach(product -> {
+            List<ProductTag> productTags = productTagsByProductIdMap.get(product.getId());
+
+            if (productTags == null || productTags.size() == 0) return;
+
+            product.getExtra().put("productTags", productTags);
+        });
     }
 }
