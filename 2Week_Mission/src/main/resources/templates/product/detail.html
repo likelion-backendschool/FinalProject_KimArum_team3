@@ -42,9 +42,15 @@
                     상품태그 :
                     <th:block th:utext="${product.extra_productTagLinks}" class="ml-2 bg-red"/>
                 </div>
-                <div class="mt-2">
-                    <a th:href="@{|/product/${product.id}/modify|}" class="btn btn-secondary btn-outline btn-sm" sec:authorize="isAuthenticated()">수정</a>
-                    <a onclick="if ( !confirm('정말로 삭제하시겠습니까?') ) return false;" th:href="@{|/product/${product.id}/delete|}" class="btn btn-secondary btn-outline btn-sm" sec:authorize="isAuthenticated()">삭제</a>
+
+                <div class="mt-2 flex">
+                    <form th:action="@{|/cart/add/${product.id}|}" method="POST" class="flex flex-col gap-3">
+                        <div class="mt-2">
+                            <input class="btn btn-secondary btn-outline btn-sm" type="submit" value="장바구니 담기">
+                        </div>
+                    </form>
+                    <a th:href="@{|/product/${product.id}/modify|}" class="btn btn-secondary btn-outline btn-sm ml-auto" sec:authorize="isAuthenticated()">수정</a>
+                    <a onclick="if ( !confirm('정말로 삭제하시겠습니까?') ) return false;" th:href="@{|/product/${product.id}/delete|}" class="btn btn-secondary btn-outline btn-sm ml-2" sec:authorize="isAuthenticated()">삭제</a>
                 </div>
                 <hr class="mt-2">
                 <div>
@@ -62,6 +68,22 @@
             </div>
         </div>
     </section>
+
+    <script>
+        function addPost(id){
+            let f = document.createElement('form');
+            let obj = document.createElement('input');
+            obj.setAttribute('type','hidden');
+            obj.setAttribute('name','id');
+            obj.setAttribute('value', id);
+
+            f.appendChild(obj);
+            f.setAttribute('method','post');
+            f.setAttribute('action','/addProduct');
+            document.body.appendChild(f);
+            f.submit();
+        }
+    </script>
 
     <th:block th:replace="fragment/toastEditor :: toastEditor"></th:block>
 
