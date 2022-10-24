@@ -33,4 +33,12 @@ public class PostKeywordService {
     public List<PostKeyword> findAllByMemberId(Long id) {
         return postKeywordRepository.findAllByMemberId(id);
     }
+
+    public PostKeyword findByContentOrSave(String content) {
+        return save(content);
+    }
+
+    public Optional<PostKeyword> findById(long id) {
+        return postKeywordRepository.findById(id);
+    }
 }
