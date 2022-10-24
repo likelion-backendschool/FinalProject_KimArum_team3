@@ -28,4 +28,16 @@ public class ProductKeywordService {
 
         return productKeyword;
     }
+
+    public Optional<ProductKeyword> findByContent(String content) {
+        return productKeywordRepository.findByContent(content);
+    }
+
+    public ProductKeyword findByContentOrSave(String content) {
+        return save(content);
+    }
+
+    public Optional<ProductKeyword> findById(long id) {
+        return productKeywordRepository.findById(id);
+    }
 }

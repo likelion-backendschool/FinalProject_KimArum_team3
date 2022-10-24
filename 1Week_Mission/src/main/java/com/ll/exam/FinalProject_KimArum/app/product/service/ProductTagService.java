@@ -15,7 +15,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ProductTagService {
     private final ProductKeywordService productKeywordService;
@@ -73,5 +72,9 @@ public class ProductTagService {
 
     public List<ProductTag> getProductTagsByProductIdIn(long[] ids) {
         return productTagRepository.findAllByProductIdIn(ids);
+    }
+
+    public List<ProductTag> getProductTags(String productKeywordContent) {
+        return productTagRepository.findAllByProductKeyword_contentOrderByProduct_idDesc(productKeywordContent);
     }
 }
