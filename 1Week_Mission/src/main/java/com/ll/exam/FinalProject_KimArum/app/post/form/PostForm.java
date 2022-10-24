@@ -13,5 +13,6 @@ public class PostForm {
     @NotEmpty
     @Size(min=1, max = 2000, message = "내용을 2000자 이하로 입력해주세요.")
     private String content;
+    private String contentHtml;
     private String hashTagContents;
 }

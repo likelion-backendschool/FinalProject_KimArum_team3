@@ -10,7 +10,7 @@
         }
     </style>
 </head>
-
+<body>
 <main layout:fragment="main">
     <section>
         <div class="container px-3 mx-auto mt-3">
@@ -39,10 +39,9 @@
                     <a onclick="if ( !confirm('정말로 삭제하시겠습니까?') ) return false;" th:href="@{|/post/${post.id}/delete|}" class="btn btn-secondary btn-outline btn-sm" sec:authorize="isAuthenticated()">삭제</a>
                 </div>
                 <hr class="mt-2">
-                <div>
-                    <div class="text-lg mt-2" th:utext="${post.getContentHtml()}">
-
-                    </div>
+                <div class="toast-ui-viewer">
+                    <div class="toastui-editor-contents" style="overflow-wrap: break-word;"
+                         th:utext="${post.getContentHtml()}"></div>
                 </div>
             </div>
         </div>
@@ -55,6 +54,7 @@
             initialValue: '# hello'
         });
     </script>
+    <th:block th:replace="fragment/toastEditor :: toastEditor"></th:block>
 </main>
-
+</body>
 </html>

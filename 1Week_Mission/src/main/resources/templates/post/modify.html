@@ -36,8 +36,11 @@
                     <label class="label">
                         <span class="label-text">내용</span>
                     </label>
-                    <input type="hidden" name="content" id="content" th:value="${post.content}"/>
-                    <div id="editor" class="editor" th:value="${post.content}"></div>
+                    <input type="hidden" name="content">
+                    <input type="hidden" name="contentHtml">
+                    <div class="toast-ui-editor" toast-ui-editor--height="calc(100vh)">
+                        <script type="text/x-template" th:utext="${post.content}"></script>
+                    </div>
                 </div>
 
 
@@ -50,22 +53,6 @@
     </section>
 
     <script>
-        var contents = "[[${post.content}]]"
-        const editor = new toastui.Editor({
-            el: document.querySelector("#editor"),
-            previewStyle: 'vertical',
-            height: '450px',
-            toolbarItems: [
-                ['heading', 'bold', 'italic', 'strike'],
-                ['hr', 'task', 'indent'],
-                ['table', 'link'],
-                ['code', 'codeblock'],
-                ['scrollSync'],
-            ],
-            placeholder: "내용을 입력해주세요.",
-            initialValue: contents
-        })
-
         function PostModify__submit(form) {
             form.subject.value = form.subject.value.trim();
             if (form.subject.value.length == 0) {
@@ -75,11 +62,15 @@
                 return;
             }
 
-            const markdown = editor.getMarkdown();
-            console.log(markdown);
-            form.content.value = markdown.trim();
-            if (form.content.value.length == 0) {
-                warningModal("내용을 입력해주세요.");
+            const editor = $(form).find(".toast-ui-editor").data("data-toast-editor");
+            const markdown = editor.getMarkdown().trim();
+            const html = editor.getHTML().trim();
+
+            form.content.value = markdown;
+            form.contentHtml.value = html;
+
+            if (form.content.value.length == 0 || form.contentHtml.value.length == 0) {
+                warningModal("내용을 입력해주세요");
                 editor.focus();
                 return;
             }
@@ -88,6 +79,7 @@
         }
     </script>
 
+    <th:block th:replace="fragment/toastEditor :: toastEditor"></th:block>
 </main>
 </body>
 </html>
