@@ -70,4 +70,8 @@ public class ProductTagService {
     public List<ProductTag> getProductTags(Product product) {
         return productTagRepository.findAllByProductId(product.getId());
     }
+
+    public List<ProductTag> getProductTagsByProductIdIn(long[] ids) {
+        return productTagRepository.findAllByProductIdIn(ids);
+    }
 }

@@ -18,7 +18,7 @@ public class ProductKeyword extends BaseEntity {
     private String content;
 
     public Object getListUrl() {
-        return "/product/tag/" + content;
+        return "/product/list?kwType=hashTag&kw=%s".formatted(content);
     }
 
     public long getExtra_postTagsCount() {
