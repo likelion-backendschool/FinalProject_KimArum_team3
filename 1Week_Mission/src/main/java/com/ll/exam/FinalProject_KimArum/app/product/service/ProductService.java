@@ -15,13 +15,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ProductService {
     private final ProductRepository productRepository;
@@ -65,20 +63,12 @@ public class ProductService {
         productTagService.applyProductTags(product, productTagContents);
     }
 
-    public Optional<Product> findById(long id) {
-        return productRepository.findById(id);
-    }
+    public Product getProductById(Long id) {
+        Product product = productRepository.findProductById(id).orElse(null);
 
-    public Optional<Product> findForPrintById(long id) {
-        Optional<Product> opProduct = findById(id);
+        loadForPrintData(product);
 
-        if (opProduct.isEmpty()) return opProduct;
-
-        List<ProductTag> productTags = getProductTags(opProduct.get());
-
-        opProduct.get().getExtra().put("productTags", productTags);
-
-        return opProduct;
+        return product;
     }
 
     private List<ProductTag> getProductTags(Product product) {
@@ -98,6 +88,11 @@ public class ProductService {
 
     public List<Product> search(String kwType, String kw) {
         return productRepository.searchQsl(kwType, kw);
+    }
+
+    public void loadForPrintData(Product product) {
+        List<ProductTag> productTags = productTagService.getProductTags(product);
+        product.getExtra().put("productTags", productTags);
     }
 
     public void loadForPrintData(List<Product> products) {
@@ -120,5 +115,18 @@ public class ProductService {
 
             product.getExtra().put("productTags", productTags);
         });
+    }
+
+    public void delete(Long id) {
+        Product product = productRepository.findProductById(id).orElse(null);
+        productRepository.delete(product);
+    }
+
+    public void modify(Product product, String subject, int price, String productTagContents) {
+        product.setSubject(subject);
+        product.setPrice(price);
+
+        productRepository.save(product);
+        applyProductTags(product, productTagContents);
     }
 }
