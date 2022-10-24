@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/layout.html}">
+
+<head>
+    <title>글 수정</title>
+</head>
+
+<body>
+<main layout:fragment="main">
+    <script>
+
+    </script>
+    <section>
+        <div class="container px-3 mx-auto mt-3">
+            <h1 class="font-bold text-lg">글 수정하기</h1>
+
+            <form th:object="${postForm}" th:action method="POST" class="flex flex-col gap-3" onsubmit="PostModify__submit(this); return false;">
+                <div th:replace="layout/error"></div>
+
+                <div class="form-control w-full">
+                    <label class="label">
+                        <span class="label-text">제목</span>
+                    </label>
+                    <input name="subject" type="text" maxlength="50" th:value="${post.subject}" class="input input-bordered w-full max-w-xxl" />
+                </div>
+
+                <div>
+                    <label class="label">
+                        <span class="label-text">해시태그</span>
+                    </label>
+                    <input type="text" name="hashTagContents" placeholder="#태그1 #태그2" class="input input-bordered w-full max-w-xxl"
+                           th:value="${post.extra_inputValue_hashTagContents}"/>
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">내용</span>
+                    </label>
+                    <input type="hidden" name="content">
+                    <input type="hidden" name="contentHtml">
+                    <div class="toast-ui-editor" toast-ui-editor--height="450px">
+                        <script type="text/x-template" th:utext="${post.content}"></script>
+                    </div>
+                </div>
+
+
+                <div class="mt-2">
+                    <input class="btn btn-secondary btn-outline w-[100%]" type="submit" value="글 작성">
+                </div>
+            </form>
+
+        </div>
+    </section>
+
+    <script>
+        function PostModify__submit(form) {
+            form.subject.value = form.subject.value.trim();
+            if (form.subject.value.length == 0) {
+                warningModal("제목을 입력해주세요.");
+                form.subject.focus();
+
+                return;
+            }
+
+            const editor = $(form).find(".toast-ui-editor").data("data-toast-editor");
+            const markdown = editor.getMarkdown().trim();
+            const html = editor.getHTML().trim();
+
+            form.content.value = markdown;
+            form.contentHtml.value = html;
+
+            if (form.content.value.length == 0 || form.contentHtml.value.length == 0) {
+                warningModal("내용을 입력해주세요");
+                editor.focus();
+                return;
+            }
+
+            form.submit();
+        }
+    </script>
+
+    <th:block th:replace="fragment/toastEditor :: toastEditor"></th:block>
+</main>
+</body>
+</html>

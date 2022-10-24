@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/layout.html}">
+
+<head>
+    <title>프로필</title>
+</head>
+
+<main layout:fragment="main">
+    <div class="container mx-auto flex-grow flex-col flex justify-center">
+        <div>아이디 : <span th:text="${#authentication.principal.username}"></span></div>
+        <div>이메일 : <span th:text="${#authentication.principal.email}"></span></div>
+        <div th:if="${#authentication.principal.nickname != null}">닉네임 : <span th:text="${#authentication.principal.nickname}"></span></div>
+
+        <div class="grid grid-cols-2 mt-2 gap-2">
+            <a href="/member/modify" class="btn btn-secondary btn-outline">회원정보수정</a>
+            <a href="/member/modifyPassword" class="btn btn-secondary btn-outline">비밀번호변경</a>
+        </div>
+    </div>
+
+</main>
+
+</html>
