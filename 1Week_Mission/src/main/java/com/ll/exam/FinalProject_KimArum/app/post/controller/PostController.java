@@ -38,8 +38,7 @@ public class PostController {
             return "post/write";
         }
 
-        String htmlContent = postService.markdownToHtml(postForm.getContent());
-        Post post = postService.writePost(memberContext.getId(), postForm.getSubject(), postForm.getContent(), htmlContent, postForm.getHashTagContents());
+        Post post = postService.writePost(memberContext.getId(), postForm.getSubject(), postForm.getContent(), postForm.getContentHtml(), postForm.getHashTagContents());
 
         return "redirect:/post/list";
     }
@@ -116,8 +115,7 @@ public class PostController {
             return "redirect:/post/"+id+"?errorMsg=" + Util.url.encode("본인이 작성하지 않은 글입니다.");
         }
 
-        String htmlContent = postService.markdownToHtml(postForm.getContent());
-        postService.modify(post, postForm.getSubject(), postForm.getContent(), htmlContent, postForm.getHashTagContents());
+        postService.modify(post, postForm.getSubject(), postForm.getContent(), postForm.getContentHtml(), postForm.getHashTagContents());
 
         return "redirect:/post/"+id+"?msg=" + Util.url.encode("게시글이 수정되었습니다.");
     }
