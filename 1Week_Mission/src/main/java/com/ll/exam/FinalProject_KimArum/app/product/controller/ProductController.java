@@ -30,6 +30,7 @@ public class ProductController {
     private final PostKeywordService postKeywordService;
     private final Rq rq;
 
+    @PreAuthorize("isAuthenticated() and hasAuthority('ADMIN')")
     @GetMapping("/create")
     public String showCreate(@AuthenticationPrincipal MemberContext memberContext, Model model) {
         System.out.println(memberContext.getId());
