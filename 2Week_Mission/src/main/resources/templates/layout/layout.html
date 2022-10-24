@@ -100,6 +100,12 @@
                     글쓰기
                 </span>
             </a>
+            <a href="/cart/list" class="inline-flex" sec:authorize="isAuthenticated()">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span class="ml-[2px] hidden sm:block">
+                    장바구니
+                </span>
+            </a>
         </div>
     </div>
 </header>
