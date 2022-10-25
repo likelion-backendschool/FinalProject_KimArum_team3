@@ -5,27 +5,33 @@
     <title>상품 리스트</title>
 
     <style>
-        .productSubject:hover{
+        .productSubject:hover {
             color: #1E9EFE;
         }
 
-        .tagName:hover{
+        .tagName:hover {
             color: #1E9EFE;
         }
 
-        th, td{
+        th, td {
             padding-left: 10px;
             padding-right: 10px;
+            padding-top: 5px;
+            padding-bottom: 5px;
             border-bottom: 1px solid gray;
             border-left: 1px solid lightgray;
         }
 
-        td{
+        td {
             text-align: center;
         }
 
         th:first-child, td:first-child {
             border-left: none;
+        }
+
+        #cartbtn{
+            font-family: FontAwesome;
         }
     </style>
 </head>
@@ -42,16 +48,26 @@
                     <th>해시태그</th>
                     <th>작성자</th>
                     <th>작성일</th>
-                    <th>수정일</th>
+                    <th>장바구니담기</th>
                 </tr>
 
                 <tr th:each="product : ${products}">
                     <td th:text="${product.id}"></td>
-                    <td class="px-[100px]"><a th:href="@{|/product/${product.id}|}" class="productSubject" th:text="${product.subject}"></td>
-                    <td><th:block th:utext="|${product.extra_productTagLinks}|" /></td>
+                    <td class="px-[100px]">
+                        <a th:href="@{|/product/${product.id}|}" class="productSubject" th:text="${product.subject}">
+                    </td>
+                    <td>
+                        <th:block th:utext="|${product.extra_productTagLinks}|"/>
+                    </td>
                     <td th:text="${product.author.nickname}"></td>
                     <td th:text="${#temporals.format(product.createDate, 'yyyy-MM-dd HH:mm')}"></td>
-                    <td th:text="${#temporals.format(product.updateDate, 'yyyy-MM-dd HH:mm')}"></td>
+                    <td>
+                        <form th:action="@{|/cart/add/${product.id}|}" method="POST" class="flex flex-col gap-3">
+                            <div>
+                                <input id="cartbtn" class="btn btn-secondary btn-outline btn-sm" type="submit" value="&#xf07a">
+                            </div>
+                        </form>
+                    </td>
                 </tr>
             </table>
         </div>
