@@ -4,13 +4,31 @@ import com.ll.exam.FinalProject_KimArum.app.cart.entity.CartItem;
 import com.ll.exam.FinalProject_KimArum.app.cart.service.CartService;
 import com.ll.exam.FinalProject_KimArum.app.member.entity.Member;
 import com.ll.exam.FinalProject_KimArum.app.member.service.MemberService;
+import com.ll.exam.FinalProject_KimArum.app.order.entity.Order;
+import com.ll.exam.FinalProject_KimArum.app.order.service.OrderService;
 import com.ll.exam.FinalProject_KimArum.app.post.entity.Post;
 import com.ll.exam.FinalProject_KimArum.app.post.service.PostService;
 import com.ll.exam.FinalProject_KimArum.app.product.entity.Product;
 import com.ll.exam.FinalProject_KimArum.app.product.service.ProductService;
 
+import java.util.Arrays;
+import java.util.List;
+
 public interface InitDataBefore {
-    default void before(MemberService memberService, PostService postService, ProductService productService, CartService cartService) {
+    default void before(MemberService memberService, PostService postService, ProductService productService, CartService cartService, OrderService orderService) {
+        class Helper {
+            public Order order(Member member, List<Product> products) {
+                for (int i = 0; i < products.size(); i++) {
+                    Product product = products.get(i);
+
+                    cartService.addItem(member, product);
+                }
+
+                return orderService.createFromCart(member);
+            }
+        }
+
+        Helper helper = new Helper();
         Member member1 = memberService.join("user1", "1234", "user1@test.com");
         Member member2 = memberService.join("user2", "1234", "user2@test.com");
 
@@ -26,6 +44,7 @@ public interface InitDataBefore {
         Product product2 = productService.create(member1, "2번 상품", 2400, 2, "#상품태그2 #상품태그3");
         Product product3 = productService.create(member1, "3번 상품", 3600, 3, "#상품태그1 #상품태그2");
         Product product4 = productService.create(member1, "4번 상품", 4800, 4, "#상품태그2 #상품태그3");
+        Product product5 = productService.create(member1, "5번 상품", 1000, 4, "#상품태그4 #상품태그5");
 
         CartItem cartItem1 = cartService.addItem(member2, product1);
         CartItem cartItem2 = cartService.addItem(member2, product2);
@@ -35,5 +54,32 @@ public interface InitDataBefore {
         memberService.addCash(member2, -5_000, "출금__일반");
 
         memberService.addCash(member1, 2_000_000, "충전__무통장입금");
+
+        // 1번 주문 : 결제완료
+        Order order1 = helper.order(member2, Arrays.asList(
+                        product1
+                )
+        );
+
+        int order1PayPrice = order1.calculatePayPrice();
+        orderService.payByRestCashOnly(order1);
+
+        // 2번 주문 : 결제 후 환불
+        Order order2 = helper.order(member2, Arrays.asList(
+                        product3,
+                        product4
+                )
+        );
+
+        orderService.payByRestCashOnly(order2);
+
+        orderService.refund(order2);
+
+        // 3번 주문 : 결제 전
+        Order order3 = helper.order(member2, Arrays.asList(
+                        product2,
+                        product5
+                )
+        );
     }
 }
