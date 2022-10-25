@@ -1,5 +1,7 @@
 package com.ll.exam.FinalProject_KimArum.app.member.service;
 
+import com.ll.exam.FinalProject_KimArum.app.cash.entity.CashLog;
+import com.ll.exam.FinalProject_KimArum.app.cash.service.CashService;
 import com.ll.exam.FinalProject_KimArum.app.member.entity.Member;
 import com.ll.exam.FinalProject_KimArum.app.member.exception.AlreadyJoinException;
 import com.ll.exam.FinalProject_KimArum.app.member.repository.MemberRepository;
@@ -15,6 +17,7 @@ import java.util.Optional;
 public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final CashService cashService;
 
     public Member join(String username, String password, String email) {
         if(memberRepository.findByUsername(username).isPresent()){
@@ -65,5 +68,20 @@ public class MemberService {
     public void modifyPassword(Member member, String newPassword) {
         member.setPassword(passwordEncoder.encode(newPassword));
         memberRepository.save(member);
+    }
+
+    @Transactional
+    public long addCash(Member member, long price, String eventType){
+        CashLog cashLog = cashService.addCash(member, price, eventType);
+
+        long newRestCash = member.getRestCash() + cashLog.getPrice();
+        member.setRestCash(newRestCash);
+        memberRepository.save(member);
+
+        return newRestCash;
+    }
+
+    public long getRestCash(Member member){
+        return member.getRestCash();
     }
 }

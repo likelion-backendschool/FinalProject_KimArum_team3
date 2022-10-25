@@ -31,6 +31,9 @@ public class Member extends BaseEntity {
     private boolean emailVerified;
     private int authLevel;
 
+    //예치금관련
+    private long restCash;
+
     public String getName() {
         return username;
     }
