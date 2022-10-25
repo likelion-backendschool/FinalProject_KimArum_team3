@@ -18,7 +18,7 @@ public class PostKeyword extends BaseEntity {
     private String content;
 
     public String getListUrl() {
-        return "/post/list?kwType=hashTag&kw=%s".formatted(content);
+        return "/post/list?kw=%s".formatted(content);
     }
 
     public long getExtra_postTagsCount() {
