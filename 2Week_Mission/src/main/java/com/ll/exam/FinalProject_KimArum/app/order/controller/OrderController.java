@@ -3,6 +3,7 @@ package com.ll.exam.FinalProject_KimArum.app.order.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ll.exam.FinalProject_KimArum.app.member.entity.Member;
+import com.ll.exam.FinalProject_KimArum.app.member.service.MemberService;
 import com.ll.exam.FinalProject_KimArum.app.order.entity.Order;
 import com.ll.exam.FinalProject_KimArum.app.order.service.OrderService;
 import com.ll.exam.FinalProject_KimArum.app.secutiry.dto.MemberContext;
@@ -15,10 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
@@ -34,6 +32,7 @@ public class OrderController {
     private final OrderService orderService;
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper;
+    private final MemberService memberService;
 
     @GetMapping("{id}")
     @PreAuthorize("isAuthenticated()")
@@ -42,11 +41,14 @@ public class OrderController {
 
         Member actor = memberContext.getMember();
 
+        long restCash = memberService.getRestCash(actor);
+
         if(orderService.actorCanSee(actor, order) == false){
             return "redirect:/product/list?errorMsg=" + Util.url.encode("사용자의 주문이 아닙니다.");
         }
 
         model.addAttribute("order", order);
+        model.addAttribute("actorRestCash", restCash);
 
         return "order/detail";
     }
@@ -74,14 +76,15 @@ public class OrderController {
             @RequestParam String paymentKey,
             @RequestParam String orderId,
             @RequestParam Long amount,
-            Model model
+            Model model,
+            @AuthenticationPrincipal MemberContext memberContext
     ) throws Exception {
 
         Order order = orderService.findById(id).get();
 
         long orderIdInputed = Long.parseLong(orderId.split("__")[1]);
 
-        if ( id != orderIdInputed ) {
+        if (id != orderIdInputed) {
             return "redirect:/order/"+id+"?errorMsg=" + Util.url.encode("잘못된 주문입니다");
         }
 
@@ -92,7 +95,15 @@ public class OrderController {
 
         Map<String, String> payloadMap = new HashMap<>();
         payloadMap.put("orderId", orderId);
-        payloadMap.put("amount", String.valueOf(order.calculatePayPrice()));
+        payloadMap.put("amount", String.valueOf(amount));
+
+        Member actor = memberContext.getMember();
+        long restCash = memberService.getRestCash(actor);
+        long payPriceRestCash = order.calculatePayPrice() - amount;
+
+        if (payPriceRestCash > restCash) {
+            return "redirect:/order/%d?errorMsg=%s".formatted(order.getId(), Util.url.encode("예치금이 부족합니다."));
+        }
 
         HttpEntity<String> request = new HttpEntity<>(objectMapper.writeValueAsString(payloadMap), headers);
 
@@ -100,11 +111,12 @@ public class OrderController {
                 "https://api.tosspayments.com/v1/payments/" + paymentKey, request, JsonNode.class);
 
         if (responseEntity.getStatusCode() == HttpStatus.OK) {
-            orderService.payByTossPayments(order);
+            orderService.payByTossPayments(order, payPriceRestCash);
 
             return "redirect:/order/%d?msg=%s".formatted(order.getId(), Util.url.encode("결제가 완료되었습니다."));
         } else {
             JsonNode failNode = responseEntity.getBody();
+            model.addAttribute("orderId", orderId);
             model.addAttribute("message", failNode.get("message").asText());
             model.addAttribute("code", failNode.get("code").asText());
             return "order/fail";
@@ -117,4 +129,23 @@ public class OrderController {
         model.addAttribute("code", code);
         return "order/fail";
     }
+
+    @PostMapping("/{id}/payByRestCashOnly")
+    @PreAuthorize("isAuthenticated()")
+    public String payByRestCashOnly(@AuthenticationPrincipal MemberContext memberContext, @PathVariable long id) {
+        Order order = orderService.findById(id).get();
+
+        Member actor = memberContext.getMember();
+
+        long restCash = memberService.getRestCash(actor);
+
+        if (orderService.actorCanPayment(actor, order) == false) {
+            return "redirect:/product/list?errorMsg=" + Util.url.encode("사용자의 주문이 아닙니다.");
+        }
+
+        orderService.payByRestCashOnly(order);
+
+        return "redirect:/order/%d?msg=%s".formatted(order.getId(), Util.url.encode("예치금으로 결제했습니다."));
+    }
+
 }
