@@ -38,7 +38,7 @@
 <link href="/common/common.css" rel="stylesheet" type="text/css"/>
 
 <!-- Toast UI Editor -->
-<link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+<link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css"/>
 
 <!-- Toast UI Editor js -->
 <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
@@ -63,31 +63,51 @@
                     회원가입
                 </span>
             </a>
-            <a href="javascript: document.logoutForm.submit();" class="inline-flex" sec:authorize="isAuthenticated()">
-                <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                <span class="ml-[2px] hidden sm:block">
-                    로그아웃
-                </span>
-            </a>
+            <div class="dropdown" sec:authorize="isAuthenticated()">
+                <label tabindex="0" class="inline-flex"><i class="fa-solid fa-circle-info"></i><span class="ml-[2px] hidden sm:block">마이페이지</span></label>
+                <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-[150px]">
+                    <li>
+                        <a href="/member/profile" class="inline-flex" sec:authorize="isAuthenticated()">
+                            <i class="fa-solid fa-user"></i>
+                            <span class="ml-[2px] hidden sm:block">프로파일</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript: document.logoutForm.submit();" class="inline-flex" sec:authorize="isAuthenticated()">
+                            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                            <span class="ml-[2px] hidden sm:block">로그아웃</span>
+                        </a>
+
+                    </li>
+                </ul>
+            </div>
             <form name="logoutForm" th:action="@{/member/logout}" method="post" hidden></form>
-            <a href="/member/profile" class="inline-flex" sec:authorize="isAuthenticated()">
-                <i class="fa-solid fa-user"></i>
-                <span class="ml-[2px] hidden sm:block">
-                    프로파일
-                </span>
-            </a>
-            <a href="/product/list" class="inline-flex">
-                <i class="fa-solid fa-bars"></i>
-                <span class="ml-[2px] hidden sm:block">
-                    상품 리스트
-                </span>
-            </a>
-            <a href="/post/list" class="inline-flex">
-                <i class="fa-solid fa-bars"></i>
-                <span class="ml-[2px] hidden sm:block">
-                    글 리스트
-                </span>
-            </a>
+
+            <div class="dropdown" sec:authorize="isAuthenticated()">
+                <label tabindex="0" class="inline-flex"><i class="fa-solid fa-bars"></i><span class="ml-[2px] hidden sm:block">목록</span></label>
+                <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-[160px]">
+                    <li>
+                        <a href="/product/list" class="inline-flex">
+                            <i class="fa-solid fa-list"></i>
+                            <span class="ml-[2px] hidden sm:block">상품 목록</span>
+                        </a>
+                    </li>
+                    <li sec:authorize="hasAuthority('ADMIN')">
+                        <a href="/post/list" class="inline-flex">
+                            <i class="fa-solid fa-feather"></i>
+                            <span class="ml-[2px] hidden sm:block">내가 쓴 글</span>
+                        </a>
+                    </li>
+                    <li>
+<!--                        href url 수정 필요-->
+                        <a href="/post/list" class="inline-flex">
+                            <i class="fa-sharp fa-solid fa-book"></i>
+                            <span class="ml-[2px] hidden sm:block">내 서재</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
             <a href="/product/create" class="inline-flex" sec:authorize="hasAuthority('ADMIN')">
                 <i class="fa-solid fa-book-medical"></i>
                 <span class="ml-[2px] hidden sm:block">
@@ -95,7 +115,7 @@
                 </span>
             </a>
             <a href="/post/write" class="inline-flex" sec:authorize="hasAuthority('ADMIN')">
-                <i class="fa-solid fa-user"></i>
+                <i class="fa-solid fa-pen-nib"></i>
                 <span class="ml-[2px] hidden sm:block">
                     글쓰기
                 </span>
