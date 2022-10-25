@@ -29,5 +29,11 @@ public interface InitDataBefore {
 
         CartItem cartItem1 = cartService.addItem(member2, product1);
         CartItem cartItem2 = cartService.addItem(member2, product2);
+
+        memberService.addCash(member2, 100_000, "충전__무통장입금");
+        memberService.addCash(member2, 20_000, "충전__무통장입금");
+        memberService.addCash(member2, -5_000, "출금__일반");
+
+        memberService.addCash(member1, 2_000_000, "충전__무통장입금");
     }
 }
