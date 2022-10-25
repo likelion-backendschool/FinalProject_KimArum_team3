@@ -53,8 +53,14 @@ public class PostController {
     }
 
     @GetMapping("/list")
-    public String showList(Model model, @RequestParam(required = false) String kwType, @RequestParam(required = false) String kw) {
-        List<Post> posts = postService.search(kwType, kw);
+    public String showList(@AuthenticationPrincipal MemberContext memberContext, Model model, @RequestParam(required = false) String kwType, @RequestParam(required = false) String kw) {
+        Member author;
+        List<Post> posts = postService.search(kw);
+
+        if(memberContext!=null){
+            author = memberContext.getMember();
+            posts = postService.search(author, kw);
+        }
 
         postService.loadForPrintData(posts);
 

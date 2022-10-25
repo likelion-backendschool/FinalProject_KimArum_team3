@@ -87,8 +87,12 @@ public class PostService {
         postHashTagService.applyHashTags(post, hashTagContents);
     }
 
-    public List<Post> search(String kwType, String kw) {
-        return postRepository.searchQsl(kwType, kw);
+    public List<Post> search(String kw) {
+        return postRepository.searchQsl(kw);
+    }
+
+    public List<Post> search(Member author, String kw) {
+        return postRepository.searchQslByAuthorAndKeyword(author, kw);
     }
 
     public void loadForPrintData(Post post) {
