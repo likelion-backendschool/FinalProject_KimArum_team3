@@ -129,4 +129,8 @@ public class ProductService {
         productRepository.save(product);
         applyProductTags(product, productTagContents);
     }
+
+    public List<Product> findProductByOrderId(Long orderId) {
+        return productRepository.findProductByOrderId(orderId);
+    }
 }
