@@ -62,28 +62,46 @@ public interface InitDataBefore {
 
         // 1번 주문 : 결제완료
         Order order1 = helper.order(member2, Arrays.asList(
+                        product1,
+                        product2
+                )
+        );
+
+        Order order2 = helper.order(member1, Arrays.asList(
                         product1
+                )
+        );
+
+        Order order3 = helper.order(member1, Arrays.asList(
+                        product3,
+                        product4
                 )
         );
 
         int order1PayPrice = order1.calculatePayPrice();
         orderService.payByRestCashOnly(order1);
 
+        int order2PayPrice = order1.calculatePayPrice();
+        orderService.payByRestCashOnly(order2);
+
+        int order3PayPrice = order1.calculatePayPrice();
+        orderService.payByRestCashOnly(order3);
+
         // 2번 주문 : 결제 후 환불
-        Order order2 = helper.order(member2, Arrays.asList(
+        Order order4 = helper.order(member2, Arrays.asList(
                         product3,
                         product4
                 )
         );
 
-        orderService.payByRestCashOnly(order2);
+        orderService.payByRestCashOnly(order4);
 
-        orderService.refund(order2);
+        orderService.refund(order4);
 
         // 3번 주문 : 결제 전
-        Order order3 = helper.order(member2, Arrays.asList(
-                        product2,
-                        product5
+        Order order5 = helper.order(member2, Arrays.asList(
+                        product5,
+                        product6
                 )
         );
     }
