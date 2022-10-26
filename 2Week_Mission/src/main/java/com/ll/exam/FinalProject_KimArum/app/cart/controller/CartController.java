@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.List;
 
@@ -61,16 +62,16 @@ public class CartController {
 
     @PostMapping("/add/{id}")
     @PreAuthorize("isAuthenticated()")
-    public String addItem(@AuthenticationPrincipal MemberContext memberContext,@PathVariable Long id) {
+    public String addItem(@AuthenticationPrincipal MemberContext memberContext, @PathVariable Long id, HttpServletRequest request) {
         Member buyer = memberContext.getMember();
         Product product = productService.getProductById(id);
 
         if(cartService.hasItem(buyer, product)){
-            return "redirect:/product/"+id+"?errorMsg=" + Util.url.encode("이미 장바구니에 담은 상품입니다.");
+            return "redirect:"+request.getHeader("referer")+"?errorMsg=" + Util.url.encode("이미 장바구니에 담은 상품입니다.");
         }
 
         cartService.addItem(buyer, product);
 
-        return "redirect:/product/"+id+"?msg=" + Util.url.encode("상품을 장바구니에 추가했습니다.");
+        return "redirect:"+request.getHeader("referer")+"?msg=" + Util.url.encode("상품을 장바구니에 추가했습니다.");
     }
 }
