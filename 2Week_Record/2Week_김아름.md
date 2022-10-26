@@ -47,14 +47,14 @@
 - 구매자, 상품 정보를 담은 CartItem 테이블
 - addItem()  
   상품을 장바구니에 추가해주는 메서드
-  ![img.png](img.png)
+  ![img.png](img/img.png)
 
   상품 상세페이지에서 **장바구니 담기** 버튼을 통해 product.id POST 전송  
 </br>
 
 - removeItem()  
   장바구니에서 상품을 삭제해주는 메서드
-  ![img_1.png](img_1.png)   
+  ![img_1.png](img/img_1.png)   
 </br>  
 
 - hasItem()  
@@ -65,25 +65,27 @@
 - showDetail()  
   order의 id를 통해 order에 대한 정보를 찾아 상세 내용 표시  
   예치금 결제를 위해 사용자의 restCash 값 넘겨줌  
+  ![img_2.png](img/img_2.png)  
   
+  로그인 사용자와 주문자가 일치하는지 검증  
+  ![img_3.png](img/img_3.png)
  </br>
  
- - payByRestCashOnly()  
-   예치금만 사용하여 결제 진행할 경우  
+- payByRestCashOnly()  
+  예치금만 사용하여 결제 진행할 경우
  
- </br>
- 
- - createOrder()  
-   장바구니에 담긴 상품들로 주문을 생성  
+- createOrder()  
+  장바구니에 담긴 상품들로 주문을 생성
+  ![img_4.png](img/img_4.png)
+ </br>  
 
- </br>
- 
- - showOrderList  
-   생성한 주문들의 리스트 메서드  
+- showOrderList  
+  생성한 주문들의 리스트 메서드  
+  ![img_5.png](img/img_5.png)
    
  </br>
     
 
 ### [특이사항]
-- 이미 구매한 상품에 대해서 장바구니에 담을 수 없거나 주문을 생성할 수 없도록 하는 방법 생각    
+- createOrder() 단계에서 이미 구매한 상품을 제외하고 주문을 생성할 수 있도록 변경해야 함    
 
