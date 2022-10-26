@@ -121,4 +121,8 @@ public class OrderService {
     public boolean actorCanPayment(Member actor, Order order) {
         return actorCanSee(actor, order);
     }
+
+    public List<Order> findAllByBuyerId(Long id) {
+        return orderRepository.findAllByBuyerId(id);
+    }
 }

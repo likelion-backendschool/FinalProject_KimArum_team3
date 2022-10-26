@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html layout:decorate="~{/layout/layout}">
+
+<head>
+    <title>주문 리스트</title>
+
+    <style>
+        .productSubject:hover {
+            color: #1E9EFE;
+        }
+
+        .tagName:hover {
+            color: #1E9EFE;
+        }
+
+        th, td {
+            padding-left: 10px;
+            padding-right: 10px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid gray;
+            border-left: 1px solid lightgray;
+        }
+
+        td {
+            text-align: center;
+        }
+
+        th:first-child, td:first-child {
+            border-left: none;
+        }
+
+        #cartbtn{
+            font-family: FontAwesome;
+        }
+    </style>
+</head>
+
+<main layout:fragment="main">
+    <section>
+        <div class="container px-3 mx-auto mt-3">
+            <h1>주문 리스트</h1>
+
+            <div class="container inline-flex">
+            <div class="card w-96 bg-base-100 shadow-xl card-compact m-5" th:each="order : ${orders}">
+                <figure><svg width="80" height="80" th:data-jdenticon-value="${order.orderItems[1].product.jdenticon}"></svg></figure>
+                <div class="card-body" >
+                    <h2 class="card-title" th:text="${order.name}"></h2>
+
+                    <div class="mb-[12px]">
+                        <div><span th:text="${#temporals.format(order.createDate, 'yyyy-MM-dd HH:mm')}"></span> 주문</div>
+                        <div><span th:text="${order.calculatePayPrice}"></span>원</div>
+                    </div>
+
+                    <div class="card-actions justify-end">
+                        <a th:href="@{|/order/${order.id}|}" class="btn btn-sm btn-secondary btn-outline">취소요청</a>
+                        <a th:href="@{|/order/${order.id}|}" class="btn btn-sm btn-secondary btn-outline">주문상세</a>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+        </div>
+    </section>
+</main>
+
+</html>
