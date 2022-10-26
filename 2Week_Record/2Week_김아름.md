@@ -28,7 +28,7 @@
 - [x] 예치금을 통한 결제 가능
 - [x] 토스 페이먼츠 연동
 - [x] 토스 페이먼츠 이용한 카드결제
-- [ ] 결제 후 MyBook에서 구매한 도서 확인 가능  
+- [x] 결제 후 MyBook에서 구매한 도서 확인 가능  
 <br/>  
 
 - [x] 주문 리스트
@@ -84,8 +84,26 @@
   ![img_5.png](img/img_5.png)
    
  </br>
+
+#### MyBook  
+Member, Product를 FK로 하여 회원이 구매한 도서 정보 저장  
+- addMyBook()
+  orderId를 통해 주문에 포함된 productList 생성    
+  구매자와 product를 이용해 MyBook 빌드, 저장  
+  ![img.png](img/img_6.png)
+ </br>
+
+- refundedMyBook()  
+  주문 환불 시 MyBook에서 정보 삭제  
+   ![img.png](img/img_7.png)  
+  </br>
+
+
+
+
+
     
 
 ### [특이사항]
 - createOrder() 단계에서 이미 구매한 상품을 제외하고 주문을 생성할 수 있도록 변경해야 함    
-
+- MyBook에 저장한 내용을 이용해 구매도서 페이지 구현 필요
