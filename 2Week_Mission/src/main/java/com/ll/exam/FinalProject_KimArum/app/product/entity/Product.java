@@ -90,7 +90,7 @@ public class Product extends BaseEntity {
                     String text = "#" + productTag.getProductKeyword().getContent();
 
                     return """
-                            <a href="%s" class="tagName" class="ml-2">%s</a>
+                            <a href="%s" class="tagName ml-2">%s</a>
                             """
                             .stripIndent()
                             .formatted(productTag.getProductKeyword().getListUrl(), text);
