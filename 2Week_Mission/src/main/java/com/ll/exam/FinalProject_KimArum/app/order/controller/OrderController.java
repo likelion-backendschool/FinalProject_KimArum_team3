@@ -23,6 +23,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.annotation.PostConstruct;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -156,5 +157,16 @@ public class OrderController {
         String redirect = "redirect:/order/%d".formatted(order.getId()) + "?msg=" + Util.url.encode("%d번 주문이 생성되었습니다.".formatted(order.getId()));
 
         return redirect;
+    }
+
+    @GetMapping("/list")
+    @PreAuthorize("isAuthenticated()")
+    public String showOrderList(@AuthenticationPrincipal MemberContext memberContext, Model model){
+        Member member = memberContext.getMember();
+        List<Order> orders = orderService.findAllByBuyerId(member.getId());
+
+        model.addAttribute("orders", orders);
+
+        return "order/list";
     }
 }
