@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ll.exam.FinalProject_KimArum.app.member.entity.Member;
 import com.ll.exam.FinalProject_KimArum.app.member.service.MemberService;
+import com.ll.exam.FinalProject_KimArum.app.mybook.service.MyBookService;
 import com.ll.exam.FinalProject_KimArum.app.order.entity.Order;
 import com.ll.exam.FinalProject_KimArum.app.order.service.OrderService;
 import com.ll.exam.FinalProject_KimArum.app.secutiry.dto.MemberContext;
@@ -34,6 +35,7 @@ public class OrderController {
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper;
     private final MemberService memberService;
+    private final MyBookService myBookService;
 
     @GetMapping("{id}")
     @PreAuthorize("isAuthenticated()")
@@ -113,6 +115,7 @@ public class OrderController {
 
         if (responseEntity.getStatusCode() == HttpStatus.OK) {
             orderService.payByTossPayments(order, payPriceRestCash);
+            myBookService.addMyBook(memberContext.getMember(), order.getId());
 
             return "redirect:/order/%d?msg=%s".formatted(order.getId(), Util.url.encode("결제가 완료되었습니다."));
         } else {

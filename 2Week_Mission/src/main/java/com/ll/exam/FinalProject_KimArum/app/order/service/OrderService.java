@@ -4,6 +4,7 @@ import com.ll.exam.FinalProject_KimArum.app.cart.entity.CartItem;
 import com.ll.exam.FinalProject_KimArum.app.cart.service.CartService;
 import com.ll.exam.FinalProject_KimArum.app.member.entity.Member;
 import com.ll.exam.FinalProject_KimArum.app.member.service.MemberService;
+import com.ll.exam.FinalProject_KimArum.app.mybook.service.MyBookService;
 import com.ll.exam.FinalProject_KimArum.app.order.entity.Order;
 import com.ll.exam.FinalProject_KimArum.app.order.entity.OrderItem;
 import com.ll.exam.FinalProject_KimArum.app.order.repository.OrderRepository;
@@ -23,6 +24,7 @@ public class OrderService {
     private final MemberService memberService;
     private final CartService cartService;
     private final OrderRepository orderRepository;
+    private final MyBookService myBookService;
 
     @Transactional
     public Order createFromCart(Member buyer) {
@@ -83,6 +85,7 @@ public class OrderService {
 
         order.setPaymentDone();
         orderRepository.save(order);
+        myBookService.addMyBook(buyer, order.getId());
     }
 
     @Transactional
@@ -92,6 +95,7 @@ public class OrderService {
 
         order.setRefundDone();
         orderRepository.save(order);
+        myBookService.refundedMyBook(order.getBuyer(), order.getId());
     }
 
     public Optional<Order> findById(long id) {
