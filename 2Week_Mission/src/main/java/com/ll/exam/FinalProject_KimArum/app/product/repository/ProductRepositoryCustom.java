@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface ProductRepositoryCustom {
     List<Product> searchQsl(String kwType, String kw);
+
+    List<Product> findProductByOrderId(Long orderId);
 }

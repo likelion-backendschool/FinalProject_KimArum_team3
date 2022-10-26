@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
+import static com.ll.exam.FinalProject_KimArum.app.order.entity.QOrderItem.orderItem;
 import static com.ll.exam.FinalProject_KimArum.app.product.entity.QProduct.product;
 import static com.ll.exam.FinalProject_KimArum.app.product.entity.QProductKeyword.productKeyword;
 import static com.ll.exam.FinalProject_KimArum.app.product.entity.QProductTag.productTag;
@@ -38,6 +39,21 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom{
         }
 
         jpqQuery.orderBy(product.id.desc());
+
+        return jpqQuery.fetch();
+    }
+
+    @Override
+    public List<Product> findProductByOrderId(Long orderId) {
+        JPAQuery<Product> jpqQuery = jpaQueryFactory
+                .select(product)
+                .distinct()
+                .from(product)
+                .innerJoin(orderItem)
+                .on(product.id.eq(orderItem.product.id))
+                .where(orderItem.order.id.eq(orderId));
+
+        jpqQuery.orderBy(orderItem.order.id.desc());
 
         return jpqQuery.fetch();
     }
