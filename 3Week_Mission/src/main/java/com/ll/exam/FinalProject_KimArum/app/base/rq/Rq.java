@@ -105,6 +105,10 @@ public class Rq {
         return "redirect:" + url;
     }
 
+    public static String redirectWithErrorMsg(String url, String msg) {
+        return "redirect:" + urlWithErrorMsg(url, msg);
+    }
+
     public long getId() {
         if (isLogout()) {
             return 0;

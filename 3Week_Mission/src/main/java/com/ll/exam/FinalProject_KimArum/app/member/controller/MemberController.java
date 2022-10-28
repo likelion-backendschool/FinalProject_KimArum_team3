@@ -43,6 +43,14 @@ public class MemberController {
     @PreAuthorize("isAnonymous()")
     @PostMapping("/join")
     public String join(@Valid JoinForm joinForm) {
+        if (memberService.findByUsername(joinForm.getUsername()).isPresent()) {
+            return Rq.redirectWithErrorMsg("/member/join", "이미 존재하는 아이디입니다.");
+        }
+
+        if (memberService.findByEmail(joinForm.getEmail()).isPresent()) {
+            return Rq.redirectWithErrorMsg("/member/join", "이미 사용 중인 이메일입니다.");
+        }
+
         memberService.join(joinForm.getUsername(), joinForm.getPassword(), joinForm.getEmail(), joinForm.getNickname());
 
         return Rq.redirectWithMsg("/member/login", "회원가입이 완료되었습니다.");
