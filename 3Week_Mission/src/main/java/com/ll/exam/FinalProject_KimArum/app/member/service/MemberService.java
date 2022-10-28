@@ -1,5 +1,6 @@
 package com.ll.exam.FinalProject_KimArum.app.member.service;
 
+import com.ll.exam.FinalProject_KimArum.app.AppConfig;
 import com.ll.exam.FinalProject_KimArum.app.base.dto.RsData;
 import com.ll.exam.FinalProject_KimArum.app.cash.entity.CashLog;
 import com.ll.exam.FinalProject_KimArum.app.cash.service.CashService;
@@ -7,9 +8,7 @@ import com.ll.exam.FinalProject_KimArum.app.email.service.EmailService;
 import com.ll.exam.FinalProject_KimArum.app.emailVerification.service.EmailVerificationService;
 import com.ll.exam.FinalProject_KimArum.app.member.entity.Member;
 import com.ll.exam.FinalProject_KimArum.app.member.entity.emum.AuthLevel;
-import com.ll.exam.FinalProject_KimArum.app.member.exception.AlreadyJoinException;
 import com.ll.exam.FinalProject_KimArum.app.member.repository.MemberRepository;
-import com.ll.exam.FinalProject_KimArum.app.AppConfig;
 import com.ll.exam.FinalProject_KimArum.app.security.dto.MemberContext;
 import com.ll.exam.FinalProject_KimArum.util.Ut;
 import lombok.AllArgsConstructor;
@@ -39,9 +38,9 @@ public class MemberService {
 
     @Transactional
     public Member join(String username, String password, String email, String nickname) {
-        if (memberRepository.findByUsername(username).isPresent()) {
-            throw new AlreadyJoinException();
-        }
+//        if (memberRepository.findByUsername(username).isPresent()) {
+//            throw new AlreadyJoinException();
+//        }
 
         Member member = Member.builder()
                 .username(username)
