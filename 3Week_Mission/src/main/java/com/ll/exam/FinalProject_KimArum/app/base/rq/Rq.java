@@ -52,6 +52,16 @@ public class Rq {
         return redirectWithMsg(url, msg);
     }
 
+    public String redirectToBackWithErrorMsg(String msg) {
+        String url = req.getHeader("Referer");
+
+        if (StringUtils.hasText(url) == false) {
+            url = "/";
+        }
+
+        return redirectWithErrorMsg(url, msg);
+    }
+
     public boolean hasAuthority(String authorityName) {
         if( memberContext == null ) return false;
 
