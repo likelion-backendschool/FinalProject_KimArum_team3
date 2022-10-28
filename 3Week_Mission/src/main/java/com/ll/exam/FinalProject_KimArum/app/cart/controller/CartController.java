@@ -4,6 +4,7 @@ import com.ll.exam.FinalProject_KimArum.app.base.rq.Rq;
 import com.ll.exam.FinalProject_KimArum.app.cart.entity.CartItem;
 import com.ll.exam.FinalProject_KimArum.app.cart.service.CartService;
 import com.ll.exam.FinalProject_KimArum.app.member.entity.Member;
+import com.ll.exam.FinalProject_KimArum.app.myBook.service.MyBookService;
 import com.ll.exam.FinalProject_KimArum.app.product.entity.Product;
 import com.ll.exam.FinalProject_KimArum.app.security.dto.MemberContext;
 import com.ll.exam.FinalProject_KimArum.util.Ut;
@@ -25,6 +26,7 @@ import java.util.List;
 @RequestMapping("/cart")
 public class CartController {
     private final CartService cartService;
+    private final MyBookService myBookService;
     private final Rq rq;
 
     @GetMapping("/items")
@@ -42,6 +44,10 @@ public class CartController {
     @PostMapping("/addItem/{productId}")
     @PreAuthorize("isAuthenticated()")
     public String addItem(@PathVariable long productId) {
+        if(myBookService.findByOwnerIdAndProductId(rq.getMember().getId(), productId).isPresent()){
+            return rq.redirectToBackWithErrorMsg("이미 소장 중인 도서입니다.");
+        }
+
         cartService.addItem(rq.getMember(), new Product((productId)));
 
         return rq.redirectToBackWithMsg("장바구니에 추가되었습니다.");
