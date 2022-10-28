@@ -50,9 +50,14 @@ public class OrderController {
         Member actor = memberContext.getMember();
 
         long restCash = memberService.getRestCash(actor);
+        int payPrice = order.calculatePayPrice();
 
         if (orderService.actorCanPayment(actor, order) == false) {
             throw new ActorCanNotPayOrderException();
+        }
+
+        if (payPrice > restCash) {
+            return Rq.redirectWithErrorMsg("/order/"+order.getId(), "예치금이 부족합니다.");
         }
 
         RsData rsData = orderService.payByRestCashOnly(order);
