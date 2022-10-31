@@ -31,6 +31,27 @@
 
 2주차의 해설 코드를 기반으로 3주차 미션 시작
 
+#### - 관리자 회원 지정  
+user2 회원을 관리자로 지정
+
+- _InitData_  
+member join 이후 user2에 대해 AuthLevel 변경
+```java
+member2.setAuthLevel(AuthLevel.ADMIN);
+memberRepository.save(member2);
+```
+
+- _CustomUserDetailService.java, Member.genAuthorities()_  
+AuthLevel이 AuthLevel.ADMIN인 경우 ADMIN authority 추가
+```java
+if (authLevel==AuthLevel.ADMIN) {
+        authorities.add(new SimpleGrantedAuthority("ADMIN"));
+}
+```  
+> authorites.add를 둘 중 어느 부분에 해줘야 맞는지 이해가 부족한 것 같음  
+> 
+
+
 <br/>
 
 ### [특이사항]
