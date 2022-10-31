@@ -2,6 +2,8 @@ package com.ll.exam.FinalProject_KimArum.app.base.initData;
 
 import com.ll.exam.FinalProject_KimArum.app.cart.service.CartService;
 import com.ll.exam.FinalProject_KimArum.app.member.entity.Member;
+import com.ll.exam.FinalProject_KimArum.app.member.entity.emum.AuthLevel;
+import com.ll.exam.FinalProject_KimArum.app.member.repository.MemberRepository;
 import com.ll.exam.FinalProject_KimArum.app.member.service.MemberService;
 import com.ll.exam.FinalProject_KimArum.app.order.entity.Order;
 import com.ll.exam.FinalProject_KimArum.app.order.repository.OrderRepository;
@@ -26,6 +28,7 @@ public class NotProdInitData {
     @Bean
     CommandLineRunner initData(
             MemberService memberService,
+            MemberRepository memberRepository,
             PostService postService,
             ProductService productService,
             CartService cartService,
@@ -41,6 +44,9 @@ public class NotProdInitData {
 
             Member member1 = memberService.join("user1", "1234", "user1@test.com", null);
             Member member2 = memberService.join("user2", "1234", "user2@test.com", "홍길순");
+
+            member2.setAuthLevel(AuthLevel.ADMIN);
+            memberRepository.save(member2);
 
             postService.write(
                     member1,
