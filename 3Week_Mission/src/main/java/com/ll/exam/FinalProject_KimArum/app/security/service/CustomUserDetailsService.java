@@ -1,6 +1,7 @@
 package com.ll.exam.FinalProject_KimArum.app.security.service;
 
 import com.ll.exam.FinalProject_KimArum.app.member.entity.Member;
+import com.ll.exam.FinalProject_KimArum.app.member.entity.emum.AuthLevel;
 import com.ll.exam.FinalProject_KimArum.app.member.repository.MemberRepository;
 import com.ll.exam.FinalProject_KimArum.app.security.dto.MemberContext;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,10 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         List<GrantedAuthority> authorities = new ArrayList<>();
 
-        if (member.getUsername().equals("user2")) {
+        if (member.getAuthLevel() == AuthLevel.NORMAL){
+            authorities.add(new SimpleGrantedAuthority("MEMBER"));
+        }
+        else if(member.getAuthLevel() == AuthLevel.ADMIN){
             authorities.add(new SimpleGrantedAuthority("ADMIN"));
         }
 
