@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -42,7 +43,7 @@ public class AdmRebateController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public String showRebateOrderItemList(String yearMonth, Model model) {
         if (yearMonth == null) {
-            yearMonth = "2022-10";
+            yearMonth = "2022-11";
         }
 
         List<RebateOrderItem> items = rebateService.findRebateOrderItemsByPayDateIn(yearMonth);
@@ -62,5 +63,23 @@ public class AdmRebateController {
         String yearMonth = Ut.url.getQueryParamValue(referer, "yearMonth", "");
 
         return Rq.redirectWithMsg("/adm/rebate/rebateOrderItemList?yearMonth=%s".formatted(yearMonth), rebateRsData);
+    }
+
+    @PostMapping("/rebate")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public String rebate(String ids, HttpServletRequest req) {
+
+        String[] idsArr = ids.split(",");
+
+        Arrays.stream(idsArr)
+                .mapToLong(Long::parseLong)
+                .forEach(id -> {
+                    rebateService.rebate(id);
+                });
+
+        String referer = req.getHeader("Referer");
+        String yearMonth = Ut.url.getQueryParamValue(referer, "yearMonth", "");
+
+        return Rq.redirectWithMsg("/adm/rebate/rebateOrderItemList?yearMonth=%s".formatted(yearMonth), "%d건의 정산품목을 정산처리하였습니다.".formatted(idsArr.length));
     }
 }
