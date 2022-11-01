@@ -231,7 +231,7 @@ public class OrderService {
         return RsData.of("S-1", "취소할 수 있습니다.");
     }
 
-    public List<OrderItem> findAllByPayDateBetween(LocalDateTime fromDate, LocalDateTime toDate){
-        return orderItemRepository.findAllByPayDateBetween(fromDate, toDate);
+    public List<OrderItem> findAllByPayDateBetweenOrderByIdAsc(LocalDateTime fromDate, LocalDateTime toDate) {
+        return orderItemRepository.findAllByPayDateBetweenOrderByIdAsc(fromDate, toDate);
     }
 }
