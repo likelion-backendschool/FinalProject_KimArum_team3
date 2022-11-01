@@ -27,7 +27,7 @@ public class RebateService {
         LocalDateTime toDate = Ut.date.parse(toDateStr);
 
         //orderItem 데이터 가져오기
-        List<OrderItem> orderItems = orderService.findAllByPayDateBetween(fromDate, toDate);
+        List<OrderItem> orderItems = orderService.findAllByPayDateBetweenOrderByIdAsc(fromDate, toDate);
 
         //데이터 변환
         List<RebateOrderItem> rebateOrderItems = orderItems
@@ -39,17 +39,28 @@ public class RebateService {
         rebateOrderItems.forEach(this::makeRebateOrderItem);
     }
 
-    private void makeRebateOrderItem(RebateOrderItem item) {
+    public void makeRebateOrderItem(RebateOrderItem item) {
         RebateOrderItem oldRebateOrderItem = rebateOrderItemRepository.findByOrderItemId(item.getOrderItem().getId()).orElse(null);
 
-        if(oldRebateOrderItem != null){
+        if (oldRebateOrderItem != null) {
             rebateOrderItemRepository.delete(oldRebateOrderItem);
         }
 
         rebateOrderItemRepository.save(item);
     }
 
-    private RebateOrderItem toRebateOrderItem(OrderItem orderItem) {
+    public RebateOrderItem toRebateOrderItem(OrderItem orderItem) {
         return new RebateOrderItem(orderItem);
+    }
+
+    public List<RebateOrderItem> findRebateOrderItemsByPayDateIn(String yearMonth) {
+        int monthEndDay = Ut.date.getEndDayOf(yearMonth);
+
+        String fromDateStr = yearMonth + "-01 00:00:00.000000";
+        String toDateStr = yearMonth + "-%02d 23:59:59.999999".formatted(monthEndDay);
+        LocalDateTime fromDate = Ut.date.parse(fromDateStr);
+        LocalDateTime toDate = Ut.date.parse(toDateStr);
+
+        return rebateOrderItemRepository.findAllByPayDateBetweenOrderByIdAsc(fromDate, toDate);
     }
 }
