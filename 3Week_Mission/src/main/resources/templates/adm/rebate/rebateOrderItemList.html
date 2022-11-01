@@ -22,6 +22,7 @@
                         <th>환불가격</th>
                         <th>판매자</th>
                         <th>예상정산가</th>
+                        <th>정산날짜</th>
                         <th>정산내역번호</th>
                         <th>비고</th>
                     </tr>
@@ -30,18 +31,19 @@
                     <tbody>
                     <tr th:each="item : ${items}">
                         <td th:text="${item.orderItem.id}"></td>
-                        <td th:text="${item.payDate}"></td>
+                        <td th:text="${#temporals.format(item.payDate, 'yy-MM-dd HH:mm:ss')}"></td>
                         <td th:text="${item.productSubject}"></td>
                         <td th:text="${item.payPrice}"></td>
                         <td th:text="${item.pgFee}"></td>
                         <td th:text="${item.refundPrice}"></td>
                         <td th:text="${item.sellerName}"></td>
                         <td th:text="${item.calculateRebatePrice}"></td>
+                        <td th:text="${#temporals.format(item.rebateDate, 'yy-MM-dd HH:mm:ss')}"></td>
                         <td th:text="${item.rebateCashLog?.id}"></td>
                         <td>
-                            <a th:if="${item.rebateAvailable}" href="javascript:;" onclick="$(this).next().submit();" class="btn btn-xs">건별정산</a>
-                            <form method="POST" th:action="@{|/adm/rebate/rebateOne/${item.orderItem.id}|}" target="_blank" hidden>
-
+                            <a th:if="${item.rebateAvailable}" href="javascript:;" onclick="$(this).next().submit();"
+                               class="btn btn-xs">건별정산</a>
+                            <form method="POST" th:action="@{|/adm/rebate/rebateOne/${item.orderItem.id}|}" hidden></form>
                             </form>
                         </td>
                     </tr>

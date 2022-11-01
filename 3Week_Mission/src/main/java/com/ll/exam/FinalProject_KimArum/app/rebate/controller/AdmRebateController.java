@@ -1,25 +1,26 @@
 package com.ll.exam.FinalProject_KimArum.app.rebate.controller;
 
+import com.ll.exam.FinalProject_KimArum.app.base.dto.RsData;
 import com.ll.exam.FinalProject_KimArum.app.base.rq.Rq;
 import com.ll.exam.FinalProject_KimArum.app.order.entity.OrderItem;
 import com.ll.exam.FinalProject_KimArum.app.rebate.entity.RebateOrderItem;
 import com.ll.exam.FinalProject_KimArum.app.rebate.service.RebateService;
 import com.ll.exam.FinalProject_KimArum.util.Ut;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
 @RequestMapping("/adm/rebate")
 @RequiredArgsConstructor
+@Slf4j
 public class AdmRebateController {
     private final RebateService rebateService;
 
@@ -31,12 +32,10 @@ public class AdmRebateController {
 
     @PostMapping("/makeData")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public String makeData(String yearMonth){
-        int monthEndDay = Ut.date.getEndDayOf(yearMonth);
+    public String makeData(String yearMonth) {
+        RsData makeDateRsData = rebateService.makeDate(yearMonth);
 
-        rebateService.makeDate(yearMonth);
-
-        return Rq.redirectWithMsg("/adm/rebate/rebateOrderItemList?yearMonth=%s".formatted(yearMonth), "정산데이터가 성공적으로 생성되었습니다.");
+        return Rq.redirectWithMsg("/adm/rebate/rebateOrderItemList?yearMonth=%s".formatted(yearMonth), makeDateRsData);
     }
 
     @GetMapping("/rebateOrderItemList")
@@ -51,5 +50,17 @@ public class AdmRebateController {
         model.addAttribute("items", items);
 
         return "adm/rebate/rebateOrderItemList";
+    }
+
+    @PostMapping("/rebateOne/{orderItemId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public String rebateOne(@PathVariable long orderItemId, HttpServletRequest req) {
+        RsData rebateRsData = rebateService.rebate(orderItemId);
+
+        String referer = req.getHeader("Referer");
+        log.debug("referer : " + referer);
+        String yearMonth = Ut.url.getQueryParamValue(referer, "yearMonth", "");
+
+        return Rq.redirectWithMsg("/adm/rebate/rebateOrderItemList?yearMonth=%s".formatted(yearMonth), rebateRsData);
     }
 }
