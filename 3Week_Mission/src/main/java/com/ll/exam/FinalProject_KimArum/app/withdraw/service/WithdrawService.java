@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -30,5 +32,9 @@ public class WithdrawService {
         withdrawRepository.save(withdraw);
 
         //memberService.addCash(member, price * -1, "출금신청");
+    }
+
+    public List<Withdraw> findAllByOrderByIdDesc() {
+        return withdrawRepository.findAllByOrderByIdDesc();
     }
 }
