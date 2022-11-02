@@ -99,6 +99,11 @@ AuthLevel이 AuthLevel.ADMIN인 경우 ADMIN authority 추가
 <br/>
 
 #### - 정산
+###### 0. 수수료 및 정산 비율
+정산비율 5:5, pg수수료 = 0 적용
+![img.png](img/img.png)
+
+![img_1.png](img/img_1.png)
 ###### 1. 건별 정산  
 
 - _RebateService.java_  
@@ -126,9 +131,7 @@ AuthLevel이 AuthLevel.ADMIN인 경우 ADMIN authority 추가
                         "cashLogId", cashLog.getId()
                 )
         );
-  ```  
-  
-  > 정산 비율 및 PG 수수로 적용 부분 확인해야함
+  ```
 
 ###### 2. 선택 정산 (전체 정산)
 정산아이템 리스트 페이지에서 체크박스 구현하여 처리하고자 하는 주문의 id값을 얻어옴  
