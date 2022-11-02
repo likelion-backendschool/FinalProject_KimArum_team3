@@ -52,7 +52,7 @@
                     }
 
                     form.submit();
-                    MemberJoin__submitDone = true;
+                    ApplyWithdraw__submitDone = true;
                 }
             </script>
 
@@ -64,15 +64,15 @@
                         <span class="label-text">은행명</span>
                     </label>
                     <input autofocus type="text" name="bankName" placeholder="은행명" class="input input-bordered"
-                           maxlength="50">
+                           maxlength="50" autocomplete='off'>
                 </div>
 
                 <div class="form-control">
                     <label class="label">
                         <span class="label-text">계좌번호</span>
                     </label>
-                    <input type="number" name="bankAccountNo"
-                           placeholder="계좌번호" class="input input-bordered" maxlength="50">
+                    <input type="text" name="bankAccountNo"
+                           placeholder="계좌번호" class="input input-bordered" maxlength="50" autocomplete='off'>
                 </div>
 
                 <div class="form-control">
