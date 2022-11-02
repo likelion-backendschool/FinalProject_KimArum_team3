@@ -79,8 +79,10 @@
                     <label class="label">
                         <span class="label-text">출금 신청 금액</span>
                     </label>
-                    <input type="number" name="price" placeholder="출금 신청 금액" class="input input-bordered"
-                           maxlength="50">
+                    <input type="number" name="price"
+                           th:placeholder="|￦ 0 ~ ￦${@ut.nf(restCash)}|"
+                           class="input input-bordered min-w-[190px]" min="0" th:max="${restCash}"
+                    >
                 </div>
 
                 <input class="btn btn-secondary btn-outline mt-2" type="submit" value="출금신청">
