@@ -1,12 +1,14 @@
 package com.ll.exam.FinalProject_KimArum.app.withdraw.entity;
 
 import com.ll.exam.FinalProject_KimArum.app.base.entity.BaseEntity;
+import com.ll.exam.FinalProject_KimArum.app.cash.entity.CashLog;
 import com.ll.exam.FinalProject_KimArum.app.member.entity.Member;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+
+import java.time.LocalDateTime;
 
 import static javax.persistence.FetchType.LAZY;
 
@@ -25,5 +27,24 @@ public class Withdraw extends BaseEntity {
 
     private String bankAccountNo;
 
-    private long price;
+    private long price; //신청금액
+
+    @ManyToOne(fetch = LAZY)
+    @ToString.Exclude
+    @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private CashLog withdrawCashLog; // 출금에 관련된 환급지급내역
+    private LocalDateTime withdrawDate;  //출금처리일
+
+    public boolean isWithdrawAvailable() {
+        if (withdrawDate != null) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public void setWithdrawDone(long cashLogId) {
+        withdrawDate = LocalDateTime.now();
+        this.withdrawCashLog = new CashLog(cashLogId);
+    }
 }

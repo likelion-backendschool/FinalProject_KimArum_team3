@@ -11,6 +11,7 @@ import com.ll.exam.FinalProject_KimArum.app.order.service.OrderService;
 import com.ll.exam.FinalProject_KimArum.app.post.service.PostService;
 import com.ll.exam.FinalProject_KimArum.app.product.entity.Product;
 import com.ll.exam.FinalProject_KimArum.app.product.service.ProductService;
+import com.ll.exam.FinalProject_KimArum.app.withdraw.service.WithdrawService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,7 +34,8 @@ public class NotProdInitData {
             ProductService productService,
             CartService cartService,
             OrderService orderService,
-            OrderRepository orderRepository
+            OrderRepository orderRepository,
+            WithdrawService withdrawService
     ) {
         return args -> {
             if (initDataDone) {
@@ -151,6 +153,9 @@ public class NotProdInitData {
                             product4
                     )
             );
+
+            withdrawService.apply(member2, "국민", "123456-12-1313231", 80000);
+            withdrawService.apply(member1, "신한은행", "123456-12-1313231", 55000);
         };
     }
 }
