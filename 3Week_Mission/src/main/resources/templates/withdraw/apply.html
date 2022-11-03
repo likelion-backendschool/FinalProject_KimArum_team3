@@ -79,9 +79,13 @@
                     <label class="label">
                         <span class="label-text">출금 신청 금액</span>
                     </label>
-                    <input type="number" name="price"
-                           th:placeholder="|￦ 0 ~ ￦${@ut.nf(restCash)}|"
+                    <input type="number" name="price" th:if="${restCash>0}"
+                           th:placeholder="|￦0 ~ ￦${@ut.nf(restCash)}|"
                            class="input input-bordered min-w-[190px]" min="0" th:max="${restCash}"
+                    >
+                    <input type="number" name="price" th:if="${restCash==0}"
+                           placeholder="보유한 예치금이 0원입니다"
+                    class="input input-bordered min-w-[190px]" disabled
                     >
                 </div>
 
