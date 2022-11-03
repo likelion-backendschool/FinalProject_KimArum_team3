@@ -163,6 +163,7 @@ public class MemberService {
         long newRestCash = member.getRestCash() + cashLog.getPrice();
         member.setRestCash(newRestCash);
         memberRepository.save(member);
+        forceAuthentication(member);
 
         return RsData.of(
                 "S-1",
