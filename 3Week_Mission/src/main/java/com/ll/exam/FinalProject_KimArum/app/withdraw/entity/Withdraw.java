@@ -60,4 +60,11 @@ public class Withdraw extends BaseEntity {
 
         isReject = true;
     }
+
+    public boolean withdrawAvailable(){
+        if(isWithdraw==true){
+            return false;
+        }
+        return true;
+    }
 }
