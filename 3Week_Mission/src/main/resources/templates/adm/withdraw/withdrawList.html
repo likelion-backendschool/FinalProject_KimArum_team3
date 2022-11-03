@@ -44,7 +44,7 @@
                         <td th:text="${item.price}"></td>
                         <td th:text="${item.withdrawCashLog?.id}"></td>
                         <td>
-                            <a th:if="${item.isWithdrawAvailable}" href="javascript:;" onclick="$(this).next().submit();"
+                            <a th:if="${item.withdrawAvailable}" href="javascript:;" onclick="$(this).next().submit();"
                                class="btn btn-primary btn-xs">건별출금처리</a>
                             <form method="POST" th:action="@{|/adm/withdraw/withdrawOne/${item.id}|}"
                                   hidden></form>
