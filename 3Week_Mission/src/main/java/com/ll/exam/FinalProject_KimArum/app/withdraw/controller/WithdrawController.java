@@ -1,5 +1,6 @@
 package com.ll.exam.FinalProject_KimArum.app.withdraw.controller;
 
+import com.ll.exam.FinalProject_KimArum.app.base.dto.RsData;
 import com.ll.exam.FinalProject_KimArum.app.base.rq.Rq;
 import com.ll.exam.FinalProject_KimArum.app.member.entity.Member;
 import com.ll.exam.FinalProject_KimArum.app.member.service.MemberService;
@@ -39,9 +40,9 @@ public class WithdrawController {
     @PostMapping("/apply")
     @PreAuthorize("isAuthenticated()")
     public String applyWithdraw(@Valid WithdrawForm withdrawForm){
-        withdrawService.apply(rq.getMember(), withdrawForm.getBankName(), withdrawForm.getBankAccountNo(), withdrawForm.getPrice());
+        RsData rsData = withdrawService.apply(rq.getMember(), withdrawForm.getBankName(), withdrawForm.getBankAccountNo(), withdrawForm.getPrice());
 
-        return Rq.redirectWithMsg("/withdraw/apply", "출금 신청이 완료되었습니다.");
+        return Rq.redirectWithMsg("/withdraw/apply", rsData.getMsg());
     }
 
 }
