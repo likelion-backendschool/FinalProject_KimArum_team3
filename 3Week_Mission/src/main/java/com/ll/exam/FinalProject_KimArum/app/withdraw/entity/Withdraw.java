@@ -35,36 +35,17 @@ public class Withdraw extends BaseEntity {
     private CashLog withdrawCashLog; // 출금에 관련된 환급지급내역
     private LocalDateTime withdrawDate;  //출금처리일
 
-    private boolean isWithdraw;
-
-    private LocalDateTime cancelDate;
-    private boolean isCanceled;
-
-    private LocalDateTime rejectDate;
-    private boolean isReject;
 
     public void setWithdrawDone(long cashLogId) {
         withdrawDate = LocalDateTime.now();
-        isWithdraw = true;
         this.withdrawCashLog = new CashLog(cashLogId);
     }
 
-    public void setCancelDone() {
-        cancelDate = LocalDateTime.now();
-
-        isCanceled = true;
-    }
-
-    public void setRefundDone() {
-        rejectDate = LocalDateTime.now();
-
-        isReject = true;
-    }
-
     public boolean withdrawAvailable(){
-        if(isWithdraw==true){
+        if (withdrawDate != null || withdrawCashLog != null) {
             return false;
         }
+
         return true;
     }
 }
