@@ -40,7 +40,7 @@ public class WithdrawController {
     @PostMapping("/apply")
     @PreAuthorize("isAuthenticated()")
     public String applyWithdraw(@Valid WithdrawForm withdrawForm){
-        RsData rsData = withdrawService.apply(rq.getMember(), withdrawForm.getBankName(), withdrawForm.getBankAccountNo(), withdrawForm.getPrice());
+        RsData rsData = withdrawService.apply(rq.getId(), withdrawForm.getBankName(), withdrawForm.getBankAccountNo(), withdrawForm.getPrice());
 
         return Rq.redirectWithMsg("/withdraw/apply", rsData.getMsg());
     }
