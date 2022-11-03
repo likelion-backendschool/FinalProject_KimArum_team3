@@ -10,5 +10,5 @@ public class WithdrawForm {
     private String bankName;
     @NotEmpty
     private String bankAccountNo;
-    private long price;
+    private Long price;
 }
