@@ -31,21 +31,23 @@ public class Withdraw extends BaseEntity {
 
     @ManyToOne(fetch = LAZY)
     @ToString.Exclude
-    @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private CashLog withdrawCashLog; // 출금에 관련된 환급지급내역
-    private LocalDateTime withdrawDate;  //출금처리일
+    private CashLog withdrawCashLog; // 출금에 관련된 내역
+    private LocalDateTime withdrawDate;
 
-
-    public void setWithdrawDone(long cashLogId) {
-        withdrawDate = LocalDateTime.now();
-        this.withdrawCashLog = new CashLog(cashLogId);
+    public Withdraw(long id) {
+        super(id);
     }
 
-    public boolean withdrawAvailable(){
-        if (withdrawDate != null || withdrawCashLog != null) {
+    public boolean withdrawAvailable() {
+        if (withdrawDate != null) {
             return false;
         }
 
         return true;
+    }
+
+    public void setWithdrawDone(Long cashLogId) {
+        withdrawDate = LocalDateTime.now();
+        this.withdrawCashLog = new CashLog(cashLogId);
     }
 }

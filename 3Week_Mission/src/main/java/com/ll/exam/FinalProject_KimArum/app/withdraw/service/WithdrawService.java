@@ -6,6 +6,7 @@ import com.ll.exam.FinalProject_KimArum.app.member.entity.Member;
 import com.ll.exam.FinalProject_KimArum.app.member.service.MemberService;
 import com.ll.exam.FinalProject_KimArum.app.withdraw.entity.Withdraw;
 import com.ll.exam.FinalProject_KimArum.app.withdraw.repository.WithdrawRepository;
+import com.ll.exam.FinalProject_KimArum.util.Ut;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,13 +15,12 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class WithdrawService {
     private final WithdrawRepository withdrawRepository;
     private final MemberService memberService;
 
-    @Transactional
-    public RsData apply(Long memberId, String bankName, String bankAccountNo, long price) {
+    public RsData<Withdraw> apply(long memberId, String bankName, String bankAccountNo, long price) {
         Member member = memberService.findById(memberId).orElse(null);
 
         if(member==null){
@@ -31,18 +31,15 @@ public class WithdrawService {
             return RsData.of("F-2", "출금 금액 초과입니다.");
         }
 
-        String bank = bankName.replaceAll("은행", "").trim();
-        bank = bank + "은행";
-
         CashLog cashLog = memberService.addCash(
                 member,
                 price * -1,
-                "출금신청__예치금")
-                .getData().getCashLog();
+                "출금신청__예치금"
+        ).getData().getCashLog();
 
         Withdraw withdraw = Withdraw.builder()
                 .member(member)
-                .bankName(bank)
+                .bankName(bankName)
                 .bankAccountNo(bankAccountNo)
                 .price(price)
                 .withdrawCashLog(cashLog)
@@ -50,10 +47,38 @@ public class WithdrawService {
 
         withdrawRepository.save(withdraw);
 
-        return RsData.of("S-1", "출금 신청이 완료되었습니다.");
+        return RsData.of("S-1", "출금 신청이 완료되었습니다.", withdraw);
     }
 
     public List<Withdraw> findAllByOrderByIdDesc() {
         return withdrawRepository.findAllByOrderByIdDesc();
+    }
+
+    public RsData withdraw(Long withdrawApplyId) {
+        Withdraw withdraw = withdrawRepository.findById(withdrawApplyId).orElse(null);
+
+        if (withdraw == null) {
+            return RsData.of("F-1", "출금신청 데이터를 찾을 수 없습니다.");
+        }
+
+        if (withdraw.withdrawAvailable() == false) {
+            return RsData.of("F-2", "이미 처리되었습니다.");
+        }
+
+        CashLog cashLog = memberService.addCash(
+                withdraw.getMember(),
+                0,
+                "출금__%d__지급__현금".formatted(withdraw.getId())
+        ).getData().getCashLog();
+
+        withdraw.setWithdrawDone(cashLog.getId());
+
+        return RsData.of(
+                "S-1",
+                "출금신청(%d번) 처리완료. %s원이 출금되었습니다.".formatted(withdraw.getId(), Ut.nf(withdraw.getPrice())),
+                Ut.mapOf(
+                        "cashLogId", cashLog.getId()
+                )
+        );
     }
 }
