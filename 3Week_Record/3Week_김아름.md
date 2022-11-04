@@ -156,8 +156,79 @@ AuthLevel이 AuthLevel.ADMIN인 경우 ADMIN authority 추가
           return Rq.redirectWithMsg("/adm/rebate/rebateOrderItemList?yearMonth=%s".formatted(yearMonth), "%d건의 정산품목을 정산처리하였습니다.".formatted(idsArr.length));
       }
   ```
+  
+<br/>
 
+#### - 출금
+###### 1. 출금 신청
+```java
+public RsData<Withdraw> apply(long memberId, String bankName, String bankAccountNo, long price) {
+        Member member = memberService.findById(memberId).orElse(null);
 
+        if(member==null){
+            return RsData.of("F-1", "존재하지 않는 회원입니다.");
+        }
+
+        if(memberService.getRestCash(member)<price){
+            return RsData.of("F-2", "출금 금액 초과입니다.");
+        }
+
+        CashLog cashLog = memberService.addCash(
+                member,
+                price * -1,
+                "출금신청__예치금"
+        ).getData().getCashLog();
+
+        Withdraw withdraw = Withdraw.builder()
+                .member(member)
+                .bankName(bankName)
+                .bankAccountNo(bankAccountNo)
+                .price(price)
+                .withdrawCashLog(cashLog)
+                .build();
+
+        withdrawRepository.save(withdraw);
+
+        return RsData.of("S-1", "출금 신청이 완료되었습니다.", withdraw);
+    }
+```  
+
+###### 2. 출금 처리
+```java
+public RsData withdraw(Long withdrawApplyId) {
+        Withdraw withdraw = withdrawRepository.findById(withdrawApplyId).orElse(null);
+
+        if (withdraw == null) {
+            return RsData.of("F-1", "출금신청 데이터를 찾을 수 없습니다.");
+        }
+
+        if (withdraw.withdrawAvailable() == false) {
+            return RsData.of("F-2", "이미 처리되었습니다.");
+        }
+
+        CashLog cashLog = memberService.addCash(
+                withdraw.getMember(),
+                0,
+                "출금__%d__지급__현금".formatted(withdraw.getId())
+        ).getData().getCashLog();
+
+        withdraw.setWithdrawDone(cashLog.getId());
+
+        return RsData.of(
+                "S-1",
+                "출금신청(%d번) 처리완료. %s원이 출금되었습니다.".formatted(withdraw.getId(), Ut.nf(withdraw.getPrice())),
+                Ut.mapOf(
+                        "cashLogId", cashLog.getId()
+                )
+        );
+    }
+```  
+
+</br>
+
+### [이후개발진행]
+1. 전체 출금 처리
+2. 출금 취소(거절)처리
 
 ### [특이사항]
 - enum 활용 및 AuthLevel 변경 시 authorities가 변화되는 로직에 대한 이해가 부족한 것 같음
