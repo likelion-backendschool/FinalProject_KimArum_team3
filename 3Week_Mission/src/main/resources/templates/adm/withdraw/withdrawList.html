@@ -58,11 +58,11 @@
                 </table>
 
                 <a href="javascript:;" onclick="WithdrawForm__submit();" class="btn btn-primary btn-sm">선택출금처리</a>
-                <form method="POST" th:action="@{|/adm/withdraw/withdraw|}" hidden>
+                <form method="POST" name="withdrawForm" th:action="@{|/adm/withdraw/withdraw|}" hidden>
                     <input type="hidden" name="ids">
                 </form>
-                <a href="javascript:;" onclick="WithdrawForm__submit();" class="btn btn-secondary btn-outline btn-sm">선택거절처리</a>
-                <form method="POST" th:action="@{|/adm/withdraw/rejectWithdraw|}" hidden>
+                <a href="javascript:;" onclick="RejectWithdrawForm__submit();" class="btn btn-secondary btn-outline btn-sm">선택거절처리</a>
+                <form method="POST" name="rejectWithdrawForm" th:action="@{|/adm/withdraw/rejectWithdraw|}" hidden>
                     <input type="hidden" name="ids">
                 </form>
 
@@ -88,7 +88,7 @@
                     function WithdrawForm__submit() {
                         if (WithdrawForm__submitDone) return;
 
-                        const form = document.rebateForm;
+                        const form = document.withdrawForm;
 
                         const $checked = $('.orderItemCheckbox:checked');
 
@@ -101,6 +101,26 @@
                         form.ids.value = ids;
                         form.submit();
                         WithdrawForm__submitDone = true;
+                    }
+
+                    let RejectWithdrawForm__submitDone = false;
+
+                    function RejectWithdrawForm__submit() {
+                        if (RejectWithdrawForm__submitDone) return;
+
+                        const form = document.rejectWithdrawForm;
+
+                        const $checked = $('.orderItemCheckbox:checked');
+
+                        if ($checked.length == 0) {
+                            warningModal('처리할 출금신청을 선택해주세요.');
+                            return;
+                        }
+
+                        const ids = $checked.map((index, el) => $(el).val()).get();
+                        form.ids.value = ids;
+                        form.submit();
+                        RejectWithdrawForm__submitDone = true;
                     }
                 </script>
             </div>

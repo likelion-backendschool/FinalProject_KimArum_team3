@@ -76,7 +76,7 @@ public class WithdrawService {
         );
     }
 
-    public RsData rejectWithdrawOne(Long withdrawApplyId) {
+    public RsData rejectWithdraw(Long withdrawApplyId) {
         Withdraw withdraw = withdrawRepository.findById(withdrawApplyId).orElse(null);
 
         if (withdraw == null) {

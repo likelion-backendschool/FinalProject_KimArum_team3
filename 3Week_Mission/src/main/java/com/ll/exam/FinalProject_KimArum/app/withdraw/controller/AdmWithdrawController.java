@@ -60,8 +60,23 @@ public class AdmWithdrawController {
     @PostMapping("/rejectWithdrawOne/{withdrawId}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public String rejectWithdrawOne(@PathVariable long withdrawId) {
-        RsData withdrawRsData = withdrawService.rejectWithdrawOne(withdrawId);
+        RsData withdrawRsData = withdrawService.rejectWithdraw(withdrawId);
 
         return Rq.redirectWithMsg("/adm/withdraw/applyList", withdrawRsData.getMsg());
+    }
+
+    @PostMapping("/rejectWithdraw")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public String rejectWithdraw(String ids) {
+
+        String[] idsArr = ids.split(",");
+
+        Arrays.stream(idsArr)
+                .mapToLong(Long::parseLong)
+                .forEach(id -> {
+                    withdrawService.rejectWithdraw(id);
+                });
+
+        return Rq.redirectWithMsg("/adm/withdraw/applyList", "%d건의 출금신청을 거절하였습니다.".formatted(idsArr.length));
     }
 }
