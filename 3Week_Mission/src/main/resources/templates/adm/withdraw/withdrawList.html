@@ -53,7 +53,7 @@
                     </tbody>
                 </table>
 
-                <a href="javascript:;" onclick="RebateForm__submit();" class="btn btn-primary btn-sm">선택출금처리</a>
+                <a href="javascript:;" onclick="WithdrawForm__submit();" class="btn btn-primary btn-sm">선택출금처리</a>
                 <form method="POST" name="rebateForm" th:action="@{|/adm/withdraw/withdraw|}" hidden>
                     <input type="hidden" name="ids">
                 </form>
@@ -75,24 +75,24 @@
                         $orderItemCheckboxAll.prop('checked', allChecked);
                     }
 
-                    let RebateForm__submitDone = false;
+                    let WithdrawForm__submitDone = false;
 
-                    function RebateForm__submit() {
-                        if (RebateForm__submitDone) return;
+                    function WithdrawForm__submit() {
+                        if (WithdrawForm__submitDone) return;
 
                         const form = document.rebateForm;
 
                         const $checked = $('.orderItemCheckbox:checked');
 
                         if ($checked.length == 0) {
-                            warningModal('정산할 주문품목을 선택해주세요.');
+                            warningModal('처리할 출금신청을 선택해주세요.');
                             return;
                         }
 
                         const ids = $checked.map((index, el) => $(el).val()).get();
                         form.ids.value = ids;
                         form.submit();
-                        RebateForm__submitDone = true;
+                        WithdrawForm__submitDone = true;
                     }
                 </script>
             </div>
