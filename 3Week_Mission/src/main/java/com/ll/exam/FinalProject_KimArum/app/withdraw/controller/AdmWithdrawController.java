@@ -56,4 +56,12 @@ public class AdmWithdrawController {
 
         return Rq.redirectWithMsg("/adm/withdraw/applyList", "%d건의 출금신청을 처리하였습니다.".formatted(idsArr.length));
     }
+
+    @PostMapping("/rejectWithdrawOne/{withdrawId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public String rejectWithdrawOne(@PathVariable long withdrawId) {
+        RsData withdrawRsData = withdrawService.rejectWithdrawOne(withdrawId);
+
+        return Rq.redirectWithMsg("/adm/withdraw/applyList", withdrawRsData.getMsg());
+    }
 }

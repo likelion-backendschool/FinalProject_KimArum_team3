@@ -48,13 +48,21 @@
                                class="btn btn-primary btn-xs">건별출금처리</a>
                             <form method="POST" th:action="@{|/adm/withdraw/withdrawOne/${item.id}|}"
                                   hidden></form>
+                            <a th:if="${item.withdrawAvailable}" href="javascript:;" onclick="$(this).next().submit();"
+                               class="btn btn-secondary btn-outline btn-xs">출금거절처리</a>
+                            <form method="POST" th:action="@{|/adm/withdraw/rejectWithdrawOne/${item.id}|}"
+                                  hidden></form>
                         </td>
                     </tr>
                     </tbody>
                 </table>
 
                 <a href="javascript:;" onclick="WithdrawForm__submit();" class="btn btn-primary btn-sm">선택출금처리</a>
-                <form method="POST" name="rebateForm" th:action="@{|/adm/withdraw/withdraw|}" hidden>
+                <form method="POST" th:action="@{|/adm/withdraw/withdraw|}" hidden>
+                    <input type="hidden" name="ids">
+                </form>
+                <a href="javascript:;" onclick="WithdrawForm__submit();" class="btn btn-secondary btn-outline btn-sm">선택거절처리</a>
+                <form method="POST" th:action="@{|/adm/withdraw/rejectWithdraw|}" hidden>
                     <input type="hidden" name="ids">
                 </form>
 
