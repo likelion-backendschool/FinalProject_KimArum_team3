@@ -229,6 +229,7 @@ public RsData withdraw(Long withdrawApplyId) {
 ### [이후개발진행]
 1. 전체 출금 처리
 2. 출금 취소(거절)처리
+3. 출금 신청 / 처리 시 CashLog를 두번 만들지 않고 하나로 처리할 수 있는 방법 고민  
 
 ### [특이사항]
 - enum 활용 및 AuthLevel 변경 시 authorities가 변화되는 로직에 대한 이해가 부족한 것 같음
