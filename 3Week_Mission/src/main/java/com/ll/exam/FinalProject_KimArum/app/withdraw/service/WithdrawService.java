@@ -75,4 +75,32 @@ public class WithdrawService {
                 )
         );
     }
+
+    public RsData rejectWithdrawOne(Long withdrawApplyId) {
+        Withdraw withdraw = withdrawRepository.findById(withdrawApplyId).orElse(null);
+
+        if (withdraw == null) {
+            return RsData.of("F-1", "출금신청 데이터를 찾을 수 없습니다.");
+        }
+
+        if (withdraw.withdrawAvailable() == false) {
+            return RsData.of("F-2", "이미 처리되었습니다.");
+        }
+
+        CashLog cashLog = memberService.addCash(
+                withdraw.getMember(),
+                withdraw.getPrice(),
+                "출금거절__예치금"
+        ).getData().getCashLog();
+
+        withdraw.setWithdrawDone(cashLog.getId());
+
+        return RsData.of(
+                "S-1",
+                "출금신청(%d번) 거절완료. %s원이 예치금입금되었습니다.".formatted(withdraw.getId(), Ut.nf(withdraw.getPrice())),
+                Ut.mapOf(
+                        "cashLogId", cashLog.getId()
+                )
+        );
+    }
 }
