@@ -47,14 +47,13 @@ member join 이후 user2에 대해 AuthLevel 변경
   memberRepository.save(member2);
   ```
 
-- _CustomUserDetailService.java, Member.genAuthorities()_  
+- _Member.genAuthorities()_  
 AuthLevel이 AuthLevel.ADMIN인 경우 ADMIN authority 추가
   ```java
   if (authLevel==AuthLevel.ADMIN) {
           authorities.add(new SimpleGrantedAuthority("ADMIN"));
   }
   ```  
-  > authorites.add를 둘 중 어느 부분에 해줘야 맞는지 이해가 부족한 것 같음
 
 <br/>
 
