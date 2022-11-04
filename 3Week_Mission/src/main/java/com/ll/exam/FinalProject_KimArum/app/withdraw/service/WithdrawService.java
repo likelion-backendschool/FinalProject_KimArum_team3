@@ -65,19 +65,13 @@ public class WithdrawService {
             return RsData.of("F-2", "이미 처리되었습니다.");
         }
 
-        CashLog cashLog = memberService.addCash(
-                withdraw.getMember(),
-                0,
-                "출금__%d__지급__현금".formatted(withdraw.getId())
-        ).getData().getCashLog();
-
-        withdraw.setWithdrawDone(cashLog.getId());
+        withdraw.setWithdrawDone(withdraw.getWithdrawCashLog().getId());
 
         return RsData.of(
                 "S-1",
                 "출금신청(%d번) 처리완료. %s원이 출금되었습니다.".formatted(withdraw.getId(), Ut.nf(withdraw.getPrice())),
                 Ut.mapOf(
-                        "cashLogId", cashLog.getId()
+                        "cashLogId", withdraw.getWithdrawCashLog().getId()
                 )
         );
     }

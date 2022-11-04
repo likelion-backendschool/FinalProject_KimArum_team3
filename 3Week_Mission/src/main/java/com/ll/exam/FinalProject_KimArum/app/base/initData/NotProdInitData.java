@@ -154,8 +154,8 @@ public class NotProdInitData {
                     )
             );
 
-            withdrawService.apply(2L, "국민", "123456-12-1313231", 80000);
-            withdrawService.apply(1L, "신한", "123456-12-1313231", 55000);
+            withdrawService.apply(2L, "국민", "123456121313231", 80000);
+            withdrawService.apply(1L, "신한", "123456121313231", 55000);
         };
     }
 }
