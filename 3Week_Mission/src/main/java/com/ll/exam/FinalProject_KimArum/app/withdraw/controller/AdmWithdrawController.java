@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -35,9 +36,24 @@ public class AdmWithdrawController {
 
     @PostMapping("/withdrawOne/{withdrawId}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public String rebateOne(@PathVariable long withdrawId) {
+    public String withdrawOne(@PathVariable long withdrawId) {
         RsData withdrawRsData = withdrawService.withdraw(withdrawId);
 
         return Rq.redirectWithMsg("/adm/withdraw/applyList", withdrawRsData.getMsg());
+    }
+
+    @PostMapping("/withdraw")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public String withdraw(String ids) {
+
+        String[] idsArr = ids.split(",");
+
+        Arrays.stream(idsArr)
+                .mapToLong(Long::parseLong)
+                .forEach(id -> {
+                    withdrawService.withdraw(id);
+                });
+
+        return Rq.redirectWithMsg("/adm/withdraw/applyList", "%d건의 출금신청을 처리하였습니다.".formatted(idsArr.length));
     }
 }
