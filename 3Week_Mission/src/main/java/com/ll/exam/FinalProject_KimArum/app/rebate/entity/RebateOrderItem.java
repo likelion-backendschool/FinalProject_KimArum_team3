@@ -122,4 +122,8 @@ public class RebateOrderItem extends BaseEntity {
         rebateDate = LocalDateTime.now();
         this.rebateCashLog = new CashLog(cashLogId);
     }
+
+    public boolean isRebateDone() {
+        return rebateDate != null;
+    }
 }
