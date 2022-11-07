@@ -87,7 +87,7 @@ class AuthTests {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        post("/member/login")
+                        post("/api/v1/member/login")
                                 .content("""
                                         {
                                             "username": "",
@@ -104,7 +104,7 @@ class AuthTests {
 
         resultActions = mvc
                 .perform(
-                        post("/member/login")
+                        post("/api/v1/member/login")
                                 .content("""
                                         {
                                             "username": "user1",
@@ -126,7 +126,7 @@ class AuthTests {
         // When
         ResultActions resultActions = mvc
                 .perform(
-                        post("/member/login")
+                        post("/api/v1/member/login")
                                 .content("""
                                         {
                                             "username": "user3",
@@ -143,7 +143,7 @@ class AuthTests {
 
         resultActions = mvc
                 .perform(
-                        post("/member/login")
+                        post("/api/v1/member/login")
                                 .content("""
                                         {
                                             "username": "user1",

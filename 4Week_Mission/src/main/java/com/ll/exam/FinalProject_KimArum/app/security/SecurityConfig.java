@@ -11,6 +11,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
+import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -22,17 +24,24 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .formLogin(
-                        formLogin -> formLogin
-                                .loginPage("/member/login") // GET
-                                .loginProcessingUrl("/member/login") // POST
-                                .successHandler(authenticationSuccessHandler)
-                                .failureHandler(authenticationFailureHandler)
-                )
-                .logout(
-                        logout -> logout
-                                .logoutUrl("/member/logout")
-                );
+                .cors().disable() // 타 도메인에서 API 호출 가능
+                .csrf().disable() // CSRF 토큰 끄기
+                .httpBasic().disable() // httpBaic 로그인 방식 끄기
+                .formLogin().disable() // 폼 로그인 방식 끄기
+                .sessionManagement(sessionManagement ->
+                        sessionManagement.sessionCreationPolicy(STATELESS)
+                ); // 세션 사용안함
+//                .formLogin(
+//                        formLogin -> formLogin
+//                                .loginPage("/member/login") // GET
+//                                .loginProcessingUrl("/member/login") // POST
+//                                .successHandler(authenticationSuccessHandler)
+//                                .failureHandler(authenticationFailureHandler)
+//                )
+//                .logout(
+//                        logout -> logout
+//                                .logoutUrl("/member/logout")
+//                );
 
         return http.build();
     }
