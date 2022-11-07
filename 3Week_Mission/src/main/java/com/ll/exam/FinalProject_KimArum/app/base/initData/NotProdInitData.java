@@ -28,8 +28,8 @@ public class NotProdInitData {
 
     @Bean
     CommandLineRunner initData(
-            MemberService memberService,
             MemberRepository memberRepository,
+            MemberService memberService,
             PostService postService,
             ProductService productService,
             CartService cartService,
@@ -45,10 +45,11 @@ public class NotProdInitData {
             initDataDone = true;
 
             Member member1 = memberService.join("user1", "1234", "user1@test.com", null);
-            Member member2 = memberService.join("user2", "1234", "user2@test.com", "홍길순");
 
-            member2.setAuthLevel(AuthLevel.ADMIN);
-            memberRepository.save(member2);
+            member1.setAuthLevel(AuthLevel.ADMIN);
+            memberRepository.save(member1);
+
+            Member member2 = memberService.join("user2", "1234", "user2@test.com", "홍길순");
 
             postService.write(
                     member1,
@@ -97,11 +98,11 @@ public class NotProdInitData {
 
             class Helper {
                 public Order order(Member member, List<Product> products) {
-                    for (int i = 0; i < products.size(); i++) {
-                        Product product = products.get(i);
-
-                        cartService.addItem(member, product);
-                    }
+                    products
+                            .stream()
+                            .forEach(product -> {
+                                cartService.addItem(member, product);
+                            });
 
                     return orderService.createFromCart(member);
                 }
@@ -137,10 +138,7 @@ public class NotProdInitData {
                     )
             );
 
-            cartService.addItem(member1, product3);
-            cartService.addItem(member1, product4);
-
-            Order order4 = helper.order(member2, Arrays.asList(
+            Order order4 = helper.order(member1, Arrays.asList(
                             product3,
                             product4
                     )
@@ -148,14 +146,19 @@ public class NotProdInitData {
 
             orderService.payByRestCashOnly(order4);
 
+            orderService.refund(order4, member1);
+
             Order order5 = helper.order(member2, Arrays.asList(
-                            product3,
-                            product4
+                            product3
                     )
             );
 
-            withdrawService.apply(2L, "국민", "123456121313231", 80000);
-            withdrawService.apply(1L, "신한", "123456121313231", 55000);
+            cartService.addItem(member1, product4);
+
+            withdrawService.apply(1L, "우리은행", "1002333203948", 50000);
+            withdrawService.apply(1L, "수협은행", "1002333203947", 40000);
+            withdrawService.apply(2L, "국민은행", "1002333203946", 30000);
+            withdrawService.apply(2L, "카카오은행", "1002333203945", 20000);
         };
     }
 }

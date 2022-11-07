@@ -32,13 +32,12 @@ public class PostTagService {
 
         List<PostTag> needToDelete = new ArrayList<>();
 
-        for (PostTag oldPostTag : oldPostTags) {
-            boolean contains = postKeywordContents.stream().anyMatch(s -> s.equals(oldPostTag.getPostKeyword().getContent()));
-
-            if (contains == false) {
-                needToDelete.add(oldPostTag);
-            }
-        }
+        oldPostTags
+                .stream()
+                .filter(oldPostTag -> !postKeywordContents
+                        .stream()
+                        .anyMatch(s -> s.equals(oldPostTag.getPostKeyword().getContent())))
+                .forEach(oldPostTag -> needToDelete.add(oldPostTag));
 
         needToDelete.forEach(postTag -> postTagRepository.delete(postTag));
 
