@@ -49,13 +49,10 @@ public class Order extends BaseEntity {
     }
 
     public int calculatePayPrice() {
-        int payPrice = 0;
-
-        for (OrderItem orderItem : orderItems) {
-            payPrice += orderItem.getSalePrice();
-        }
-
-        return payPrice;
+        return orderItems
+                .stream()
+                .mapToInt(orderItem -> orderItem.getSalePrice())
+                .sum();
     }
 
     public void setCancelDone() {
@@ -85,12 +82,10 @@ public class Order extends BaseEntity {
     }
 
     public int getPayPrice() {
-        int payPrice = 0;
-        for (OrderItem orderItem : orderItems) {
-            payPrice += orderItem.getPayPrice();
-        }
-
-        return payPrice;
+        return orderItems
+                .stream()
+                .mapToInt(orderItem -> orderItem.getPayPrice())
+                .sum();
     }
 
     public void makeName() {
