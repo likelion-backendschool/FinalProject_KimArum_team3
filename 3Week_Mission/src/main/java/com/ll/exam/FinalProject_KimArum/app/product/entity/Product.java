@@ -1,5 +1,6 @@
 package com.ll.exam.FinalProject_KimArum.app.product.entity;
 
+import com.ll.exam.FinalProject_KimArum.app.AppConfig;
 import com.ll.exam.FinalProject_KimArum.app.base.entity.BaseEntity;
 import com.ll.exam.FinalProject_KimArum.app.cart.entity.CartItem;
 import com.ll.exam.FinalProject_KimArum.app.member.entity.Member;
@@ -40,7 +41,7 @@ public class Product extends BaseEntity {
     }
 
     public int getWholesalePrice() {
-        return (int) Math.ceil(getPrice() * 0.5);
+        return (int) Math.ceil(getPrice() * AppConfig.getWholesalePriceRate());
     }
 
     public boolean isOrderable() {
