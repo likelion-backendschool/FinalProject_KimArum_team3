@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html layout:decorate="~{/adm/layout/layout}">
+
+<head>
+    <title>출금신청 목록</title>
+</head>
+
+<main layout:fragment="main">
+    <div class="container mx-auto">
+        <div>
+            <h1>출금신청 목록</h1>
+
+            <div class="overflow-x-auto">
+                <table class="table table-compact w-full">
+                    <thead>
+                    <tr>
+                        <th>
+                            <input type="checkbox" class="orderItemCheckboxAll checkbox">
+                        </th>
+                        <th>번호</th>
+                        <th>신청날짜</th>
+                        <th>처리날짜</th>
+                        <th>신청인</th>
+                        <th>은행명</th>
+                        <th>계좌번호</th>
+                        <th>신청금액</th>
+                        <th>정산내역번호</th>
+                        <th>비고</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr th:each="item : ${withdrawList}">
+                        <td>
+                            <input onchange="OrderItemCheckbox__changed();" th:if="${item.withdrawAvailable}"
+                                   type="checkbox" class="orderItemCheckbox checkbox" th:value="${item.id}">
+                        </td>
+                        <td th:text="${item.id}"></td>
+                        <td th:text="${#temporals.format(item.createDate, 'yy-MM-dd HH:mm:ss')}"></td>
+                        <td th:text="${#temporals.format(item.withdrawDate, 'yy-MM-dd HH:mm:ss')}"></td>
+                        <td th:text="${item.member.username}"></td>
+                        <td th:text="${item.bankName}"></td>
+                        <td th:text="${item.bankAccountNo}"></td>
+                        <td th:text="${item.price}"></td>
+                        <td th:text="${item.withdrawCashLog?.id}"></td>
+                        <td>
+                            <a th:if="${item.withdrawAvailable}" href="javascript:;" onclick="$(this).next().submit();"
+                               class="btn btn-primary btn-xs">건별출금처리</a>
+                            <form method="POST" th:action="@{|/adm/withdraw/withdrawOne/${item.id}|}"
+                                  hidden></form>
+                            <a th:if="${item.withdrawAvailable}" href="javascript:;" onclick="$(this).next().submit();"
+                               class="btn btn-secondary btn-outline btn-xs">출금거절처리</a>
+                            <form method="POST" th:action="@{|/adm/withdraw/rejectWithdrawOne/${item.id}|}"
+                                  hidden></form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <a href="javascript:;" onclick="WithdrawForm__submit();" class="btn btn-primary btn-sm">선택출금처리</a>
+                <form method="POST" name="withdrawForm" th:action="@{|/adm/withdraw/withdraw|}" hidden>
+                    <input type="hidden" name="ids">
+                </form>
+                <a href="javascript:;" onclick="RejectWithdrawForm__submit();" class="btn btn-secondary btn-outline btn-sm">선택거절처리</a>
+                <form method="POST" name="rejectWithdrawForm" th:action="@{|/adm/withdraw/rejectWithdraw|}" hidden>
+                    <input type="hidden" name="ids">
+                </form>
+
+                <script>
+                    // 전체선택 체크박스
+                    const $orderItemCheckboxAll = $('.orderItemCheckboxAll');
+                    // 아이템 체크박스
+                    const $orderItemCheckbox = $('.orderItemCheckbox');
+
+                    $orderItemCheckboxAll.change(function () {
+                        const allChecked = $(this).prop('checked');
+                        $orderItemCheckbox.prop('checked', allChecked); // 아이템 체크박스들에게 체크상태 동기화
+                    });
+
+                    function OrderItemCheckbox__changed() {
+                        const allChecked = $orderItemCheckbox.length == $('.orderItemCheckbox:checked').length;
+
+                        $orderItemCheckboxAll.prop('checked', allChecked);
+                    }
+
+                    let WithdrawForm__submitDone = false;
+
+                    function WithdrawForm__submit() {
+                        if (WithdrawForm__submitDone) return;
+
+                        const form = document.withdrawForm;
+
+                        const $checked = $('.orderItemCheckbox:checked');
+
+                        if ($checked.length == 0) {
+                            warningModal('처리할 출금신청을 선택해주세요.');
+                            return;
+                        }
+
+                        const ids = $checked.map((index, el) => $(el).val()).get();
+                        form.ids.value = ids;
+                        form.submit();
+                        WithdrawForm__submitDone = true;
+                    }
+
+                    let RejectWithdrawForm__submitDone = false;
+
+                    function RejectWithdrawForm__submit() {
+                        if (RejectWithdrawForm__submitDone) return;
+
+                        const form = document.rejectWithdrawForm;
+
+                        const $checked = $('.orderItemCheckbox:checked');
+
+                        if ($checked.length == 0) {
+                            warningModal('처리할 출금신청을 선택해주세요.');
+                            return;
+                        }
+
+                        const ids = $checked.map((index, el) => $(el).val()).get();
+                        form.ids.value = ids;
+                        form.submit();
+                        RejectWithdrawForm__submitDone = true;
+                    }
+                </script>
+            </div>
+        </div>
+    </div>
+</main>
+
+</html>
