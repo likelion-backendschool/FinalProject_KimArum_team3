@@ -7,6 +7,7 @@ import com.ll.exam.FinalProject_KimArum.app.myBook.entity.MyBook;
 import com.ll.exam.FinalProject_KimArum.app.myBook.service.MyBookService;
 import com.ll.exam.FinalProject_KimArum.app.security.dto.MemberContext;
 import com.ll.exam.FinalProject_KimArum.util.Ut;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,6 +20,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/myBooks")
+@Tag(name = "MemberController", description = "회원이 구매한 도서 리스트, 상세 정보 제공 기능을 담당하는 컨트롤러")
 public class MyBookController {
     private final MyBookService myBookService;
     private final Rq rq;
