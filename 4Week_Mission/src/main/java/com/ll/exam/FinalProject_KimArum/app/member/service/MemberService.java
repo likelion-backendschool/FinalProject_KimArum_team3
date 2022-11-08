@@ -6,6 +6,7 @@ import com.ll.exam.FinalProject_KimArum.app.cash.entity.CashLog;
 import com.ll.exam.FinalProject_KimArum.app.cash.service.CashService;
 import com.ll.exam.FinalProject_KimArum.app.email.service.EmailService;
 import com.ll.exam.FinalProject_KimArum.app.emailVerification.service.EmailVerificationService;
+import com.ll.exam.FinalProject_KimArum.app.jwt.JwtProvider;
 import com.ll.exam.FinalProject_KimArum.app.member.entity.Member;
 import com.ll.exam.FinalProject_KimArum.app.member.entity.emum.AuthLevel;
 import com.ll.exam.FinalProject_KimArum.app.member.repository.MemberRepository;
@@ -35,6 +36,7 @@ public class MemberService {
     private final EmailVerificationService emailVerificationService;
     private final EmailService emailService;
     private final CashService cashService;
+    private final JwtProvider jwtProvider;
 
     @Transactional
     public Member join(String username, String password, String email, String nickname) {
@@ -143,7 +145,7 @@ public class MemberService {
     }
 
     private void forceAuthentication(Member member) {
-        MemberContext memberContext = new MemberContext(member, member.genAuthorities());
+        MemberContext memberContext = new MemberContext(member, member.getAuthorities());
 
         UsernamePasswordAuthenticationToken authentication =
                 UsernamePasswordAuthenticationToken.authenticated(
@@ -184,5 +186,9 @@ public class MemberService {
 
     public long getRestCash(Member member) {
         return memberRepository.findById(member.getId()).get().getRestCash();
+    }
+
+    public String genAccessToken(Member member){
+        return jwtProvider.generateAccessToken(member.getAccessTokenClaims(), 60 * 60 * 24 * 90);
     }
 }
