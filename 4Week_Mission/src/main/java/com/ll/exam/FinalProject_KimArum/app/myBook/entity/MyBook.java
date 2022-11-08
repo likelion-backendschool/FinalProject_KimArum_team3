@@ -1,6 +1,7 @@
 package com.ll.exam.FinalProject_KimArum.app.myBook.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ll.exam.FinalProject_KimArum.app.base.entity.BaseEntity;
 import com.ll.exam.FinalProject_KimArum.app.member.entity.Member;
 import com.ll.exam.FinalProject_KimArum.app.order.entity.OrderItem;
@@ -23,15 +24,16 @@ import static javax.persistence.FetchType.LAZY;
 @SuperBuilder
 @ToString(callSuper = true)
 public class MyBook extends BaseEntity {
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne
     @ToString.Exclude
     private Member owner;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne
     @ToString.Exclude
     private Product product;
 
     @ManyToOne(fetch = LAZY)
     @ToString.Exclude
+    @JsonIgnore
     private OrderItem orderItem;
 }

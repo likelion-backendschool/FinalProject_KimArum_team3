@@ -1,5 +1,6 @@
 package com.ll.exam.FinalProject_KimArum.app.product.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ll.exam.FinalProject_KimArum.app.AppConfig;
 import com.ll.exam.FinalProject_KimArum.app.base.entity.BaseEntity;
 import com.ll.exam.FinalProject_KimArum.app.cart.entity.CartItem;
@@ -25,9 +26,10 @@ import static javax.persistence.FetchType.LAZY;
 @SuperBuilder
 @ToString(callSuper = true)
 public class Product extends BaseEntity {
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne
     private Member author;
     @ManyToOne(fetch = LAZY)
+    @JsonIgnore
     private PostKeyword postKeyword;
     private String subject;
     private int price;
