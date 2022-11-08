@@ -4,15 +4,14 @@ import com.ll.exam.FinalProject_KimArum.app.base.dto.RsData;
 import com.ll.exam.FinalProject_KimArum.app.member.entity.Member;
 import com.ll.exam.FinalProject_KimArum.app.member.form.LoginForm;
 import com.ll.exam.FinalProject_KimArum.app.member.service.MemberService;
+import com.ll.exam.FinalProject_KimArum.app.security.dto.MemberContext;
 import com.ll.exam.FinalProject_KimArum.util.Ut;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/member")
@@ -52,5 +51,14 @@ public class MemberRestController {
                 ),
                 Ut.spring.httpHeadersOf("Authentication", accessToken)
         );
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<RsData> me(@AuthenticationPrincipal MemberContext memberContext){
+        if(memberContext == null){
+            return Ut.spring.responseEntityOf(RsData.failOf(null));
+        }
+
+        return Ut.spring.responseEntityOf(RsData.successOf(memberContext));
     }
 }
