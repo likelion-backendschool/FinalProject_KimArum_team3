@@ -127,9 +127,10 @@
   > No serializer found for class org.hibernate.proxy.pojo.bytebuddy.ByteBuddyInterceptor and no properties discovered to create BeanSerializer
 
   - **원인**  
-  `@ManyToOne` 컬럼의 `fetch=LAZY`로 인한 JSON 오류  
-  DB에서 엔티티 정보를 가져올 때 매핑되어 있는 다른 엔티티의 정보를 어느 시점에
-  가져올지 정하는 옵션    
+  1. `@ManyToOne` 컬럼의 `fetch=LAZY`로 인한 JSON 오류  
+     - DB에서 엔티티 정보를 가져올 때 매핑되어 있는 다른 엔티티의 정보를 어느 시점에
+     가져올지 정하는 옵션
+  2. springboot 설정이나 ObjectMapper를 이용해 json 으로 파싱할 때 객체 내에 필드에 대한 접근 권한이 없어서 발생
   
   - **수정 사항 및 궁금증**  
     오류가 발생하는 부분 (member, product, postkeyword 등)에 `@JsonIgnore` 어노테이션 추가
@@ -164,10 +165,11 @@
   > No serializer found for class org.hibernate.proxy.pojo.bytebuddy.ByteBuddyInterceptor and no properties discovered to create BeanSerializer
 
   - **원인**  
-    `@ManyToOne` 컬럼의 `fetch=LAZY`로 인한 JSON 오류  
-    DB에서 엔티티 정보를 가져올 때 매핑되어 있는 다른 엔티티의 정보를 어느 시점에
-    가져올지 정하는 옵션  
-    PostKeyword 엔티티에서 오류 발생
+  1. `@ManyToOne` 컬럼의 `fetch=LAZY`로 인한 JSON 오류
+    - DB에서 엔티티 정보를 가져올 때 매핑되어 있는 다른 엔티티의 정보를 어느 시점에
+      가져올지 정하는 옵션
+  2. springboot 설정이나 ObjectMapper를 이용해 json 으로 파싱할 때 객체 내에 필드에 대한 접근 권한이 없어서 발생  
+  PostKeyword 엔티티에서 오류 발생
 
   - **수정 사항 및 궁금증**  
     오류가 발생하는 부분에 `@JsonIgnore` 어노테이션 추가
