@@ -97,7 +97,7 @@
             <div class="dropdown dropdown-hover">
                 <label tabindex="0" class="m-1 leading-[31px]">글/도서</label>
                 <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
-                    <li th:if="${@rq.logined}">
+                    <li th:if="${@rq.hasAuthority('AUTHOR')}">
                         <a href="/post/write" class="inline-flex">
                             <i class="fa-solid fa-pen"></i>
                             <span class="ml-[2px] lg:block">글 작성</span>

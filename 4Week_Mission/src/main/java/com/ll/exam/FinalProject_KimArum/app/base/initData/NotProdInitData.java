@@ -45,11 +45,10 @@ public class NotProdInitData {
             initDataDone = true;
 
             Member member1 = memberService.join("user1", "1234", "user1@test.com", null);
-
-            member1.setAuthLevel(AuthLevel.ADMIN);
-            memberRepository.save(member1);
-
             Member member2 = memberService.join("user2", "1234", "user2@test.com", "홍길순");
+
+            member2.setAuthLevel(AuthLevel.ADMIN);
+            memberRepository.save(member2);
 
             postService.write(
                     member1,
