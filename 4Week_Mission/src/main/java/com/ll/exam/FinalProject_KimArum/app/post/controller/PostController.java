@@ -104,6 +104,7 @@ public class PostController {
     public String tagList(Model model, @PathVariable String tagContent) {
         List<PostTag> postTags = postService.getPostTags(rq.getMember(), tagContent);
 
+        System.out.println(postTags);
         model.addAttribute("postTags", postTags);
         return "post/tagList";
     }
