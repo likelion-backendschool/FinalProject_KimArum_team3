@@ -85,4 +85,8 @@ public class PostTagService {
     public List<ProductTag> getPostTags(String productTagContent) {
         return postTagRepository.findAllByPostKeyword_contentOrderByPost_idDesc(productTagContent);
     }
+
+    public List<PostTag> findByPostKeyword(PostKeyword postKeyword){
+        return postTagRepository.findByPostKeyword(postKeyword);
+    }
 }
