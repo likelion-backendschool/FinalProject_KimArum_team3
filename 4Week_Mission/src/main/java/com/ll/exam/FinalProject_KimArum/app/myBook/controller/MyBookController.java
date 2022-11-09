@@ -3,6 +3,7 @@ package com.ll.exam.FinalProject_KimArum.app.myBook.controller;
 import com.ll.exam.FinalProject_KimArum.app.base.dto.RsData;
 import com.ll.exam.FinalProject_KimArum.app.base.rq.Rq;
 import com.ll.exam.FinalProject_KimArum.app.member.entity.Member;
+import com.ll.exam.FinalProject_KimArum.app.myBook.dto.MyBookDto;
 import com.ll.exam.FinalProject_KimArum.app.myBook.entity.MyBook;
 import com.ll.exam.FinalProject_KimArum.app.myBook.service.MyBookService;
 import com.ll.exam.FinalProject_KimArum.app.security.dto.MemberContext;
@@ -31,10 +32,12 @@ public class MyBookController {
         Member member = memberContext.getMember();
         List<MyBook> myBooks = myBookService.findAllByOwnerId(member.getId());
 
+        List<MyBookDto> myBookDtos = MyBookDto.getApiMyBookByMyBook(myBooks);
+
         return Ut.spring.responseEntityOf(
                 RsData.successOf(
                         Ut.mapOf(
-                                "myBooks", myBooks
+                                "myBooks", myBookDtos
                         )
                 )
         );
