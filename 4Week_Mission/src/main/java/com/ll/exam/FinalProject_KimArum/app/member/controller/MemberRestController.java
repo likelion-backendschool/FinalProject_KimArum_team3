@@ -3,6 +3,7 @@ package com.ll.exam.FinalProject_KimArum.app.member.controller;
 import com.ll.exam.FinalProject_KimArum.app.base.dto.RsData;
 import com.ll.exam.FinalProject_KimArum.app.member.entity.Member;
 import com.ll.exam.FinalProject_KimArum.app.member.form.LoginForm;
+import com.ll.exam.FinalProject_KimArum.app.member.form.MemberDto;
 import com.ll.exam.FinalProject_KimArum.app.member.service.MemberService;
 import com.ll.exam.FinalProject_KimArum.app.security.dto.MemberContext;
 import com.ll.exam.FinalProject_KimArum.util.Ut;
@@ -57,10 +58,14 @@ public class MemberRestController {
 
     @GetMapping("/me")
     public ResponseEntity<RsData> me(@AuthenticationPrincipal MemberContext memberContext){
-        if(memberContext == null){
+        Member member = memberContext.getMember();
+
+        if(member == null){
             return Ut.spring.responseEntityOf(RsData.failOf(null));
         }
 
-        return Ut.spring.responseEntityOf(RsData.successOf(memberContext));
+        MemberDto memberDto = MemberDto.getApiMemberByMember(member);
+
+        return Ut.spring.responseEntityOf(RsData.successOf(memberDto));
     }
 }
