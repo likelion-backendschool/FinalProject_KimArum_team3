@@ -12,4 +12,6 @@ public interface MyBookRepository extends JpaRepository<MyBook, Long> {
     Optional<MyBook> findByOwnerIdAndProductId(long ownerId, long productId);
 
     List<MyBook> findAllByOwnerId(long ownerId);
+
+    Optional<MyBook> findById(long myBookId);
 }

@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,6 +35,23 @@ public class MyBookController {
                 RsData.successOf(
                         Ut.mapOf(
                                 "myBooks", myBooks
+                        )
+                )
+        );
+    }
+
+    @GetMapping("/{myBookId}")
+    public ResponseEntity<RsData> detail(@PathVariable long myBookId){
+        MyBook myBook = myBookService.findById(myBookId).orElse(null);
+
+        if(myBook == null){
+            return Ut.spring.responseEntityOf(RsData.of("F-1", "도서 정보가 올바르지 않습니다."));
+        }
+
+        return Ut.spring.responseEntityOf(
+                RsData.successOf(
+                        Ut.mapOf(
+                                "myBook", myBook
                         )
                 )
         );
