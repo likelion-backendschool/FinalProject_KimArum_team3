@@ -15,8 +15,8 @@
 ### 2. 개발 체크리스트
 #### 필수과제
 - [x] JWT 로그인 구현(POST /api/v1/member/login)
-- [ ] 내 도서 리스트 구현(GET /api/v1/myBooks) (△)
-- [ ] 내 도서 상세정보 구현(GET /api/v1/myBooks/{id}) (△)
+- [x] 내 도서 리스트 구현(GET /api/v1/myBooks)
+- [x] 내 도서 상세정보 구현(GET /api/v1/myBooks/{id})
 - [x] 로그인 한 회원의 정보 구현(GET /api/v1/member/me)
 - [x] Srping Doc 으로 API 문서화(크롬 /swagger-ui/index.html )
 
@@ -34,7 +34,7 @@
 - RsData를 활용해 resultCode, msg, data를 담은 json 형태로 응답 리턴
 
 
-###### 1. MemberRestController
+#### 1. MemberRestController
 기존에 MemberController가 존재하고 있어서 JWT 로그인과
 사용자의 상세 정보 제공 기능을 담당할 RestController를 따로 추가했다.
 
@@ -99,7 +99,7 @@
 
 </br>
 
-###### 2. MyBookController
+#### 2. MyBookController
 
 - GET /api/v1/myBooks  
   사용자가 구매한 도서들의 리스트 페이지
@@ -169,6 +169,6 @@
 
 
 ### [이후개발진행]
-
-### [특이사항]
-
+- [ ] 엑세스 토큰 화이트리스트 구현(Member 엔티티에 accessToken 필드 추가)
+- [ ] 리액트에서 작동되도록
+- [ ] 전체적인 dto 처리
