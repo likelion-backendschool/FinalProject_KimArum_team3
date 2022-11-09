@@ -123,20 +123,6 @@
   - 로그인된 사용자의 id를 이용해 myBook 조회
   - 조회된 myBook 리스트를 응답 본문에 담아 return
 
-  > **500 에러 발생**  
-  > No serializer found for class org.hibernate.proxy.pojo.bytebuddy.ByteBuddyInterceptor and no properties discovered to create BeanSerializer
-
-  - **원인**  
-  1. `@ManyToOne` 컬럼의 `fetch=LAZY`로 인한 JSON 오류  
-     - DB에서 엔티티 정보를 가져올 때 매핑되어 있는 다른 엔티티의 정보를 어느 시점에
-     가져올지 정하는 옵션
-  2. springboot 설정이나 ObjectMapper를 이용해 json 으로 파싱할 때 객체 내에 필드에 대한 접근 권한이 없어서 발생
-  
-  - **수정 사항 및 궁금증**  
-    오류가 발생하는 부분 (member, product, postkeyword 등)에 `@JsonIgnore` 어노테이션 추가
-    - JSON 오류는 발생하지 않지만 Ignore 처리한 엔티티에 대한 정보를 불러오지 못함
-    - 불러오지 못하는 정보들 또한 필요한 데이터여서 문제가 해결되지 않음
-
 </br>
 
 - Get /api/v1/myBooks/{id}  
@@ -161,19 +147,25 @@
   ```
   - myBookId를 이용해 DB 조회
   
-  > **500 에러 발생**  
+</br>
+
+  > **/myBooks, /myBooks/{id} 구현 중 500 에러 발생**  
   > No serializer found for class org.hibernate.proxy.pojo.bytebuddy.ByteBuddyInterceptor and no properties discovered to create BeanSerializer
 
   - **원인**  
-  1. `@ManyToOne` 컬럼의 `fetch=LAZY`로 인한 JSON 오류
-    - DB에서 엔티티 정보를 가져올 때 매핑되어 있는 다른 엔티티의 정보를 어느 시점에
-      가져올지 정하는 옵션
-  2. springboot 설정이나 ObjectMapper를 이용해 json 으로 파싱할 때 객체 내에 필드에 대한 접근 권한이 없어서 발생  
-  PostKeyword 엔티티에서 오류 발생
+    1. `@ManyToOne` 컬럼의 `fetch=LAZY`로 인한 JSON 오류
+       - DB에서 엔티티 정보를 가져올 때 매핑되어 있는 다른 엔티티의 정보를 어느 시점에
+         가져올지 정하는 옵션
+    2. springboot 설정이나 ObjectMapper를 이용해 json 으로 파싱할 때 객체 내에 필드에 대한 접근 권한이 없어서 발생
 
-  - **수정 사항 및 궁금증**  
-    오류가 발생하는 부분에 `@JsonIgnore` 어노테이션 추가
-    - PostKeyword를 Ignore처리하면 구매한 도서에 포함되는 Post에 대한 정보 또한 조회할 수 없는 문제
+  - **해결**  
+    1. @ManyToOne 어노테이션에서 fetch=Lazy 조건 삭제
+       - 모든 오류가 해결되지 않음
+    2. 오류가 발생하는 부분에 `@JsonIgnore` 어노테이션 추가
+       - JSON 오류는 발생하지 않지만 Ignore 처리한 엔티티(PostKeyword, Product 등)에 대한 정보를 불러오지 못함  
+    3. **dto 생성**
+       - **엔티티에 직접 접근하고, 데이터를 사용하면서 무한 참조로 인해 오류가 발생하였음**
+       - **dto를 생성하여 데이터를 전달하는 객체를 만들어 무한 참조를 예방**
 
 
 ### [이후개발진행]
