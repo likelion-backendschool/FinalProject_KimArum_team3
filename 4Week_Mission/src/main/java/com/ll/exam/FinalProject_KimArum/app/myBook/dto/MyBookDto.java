@@ -25,7 +25,7 @@ public class MyBookDto {
     Long ownerId;
     ProductDto product;
 
-    public static List<MyBookDto> getApiMyBookByMyBook(List<MyBook> myBooks) {
+    public static List<MyBookDto> myBookToMyBookDto(List<MyBook> myBooks) {
 
         List<MyBookDto> myBookDtos = new ArrayList<>();
 
@@ -49,7 +49,7 @@ public class MyBookDto {
         return myBookDtos;
     }
 
-    public static MyBookDto getApiMyBookByMyBook(MyBook myBook, List<Post> posts) {
+    public static MyBookDto myBookToMyBookDto(MyBook myBook, List<Post> posts) {
 
         List<PostDto> postDtos = new ArrayList<>();
 

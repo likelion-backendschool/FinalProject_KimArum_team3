@@ -3,7 +3,7 @@ package com.ll.exam.FinalProject_KimArum.app.member.controller;
 import com.ll.exam.FinalProject_KimArum.app.base.dto.RsData;
 import com.ll.exam.FinalProject_KimArum.app.member.entity.Member;
 import com.ll.exam.FinalProject_KimArum.app.member.form.LoginForm;
-import com.ll.exam.FinalProject_KimArum.app.member.form.MemberDto;
+import com.ll.exam.FinalProject_KimArum.app.member.dto.MemberDto;
 import com.ll.exam.FinalProject_KimArum.app.member.service.MemberService;
 import com.ll.exam.FinalProject_KimArum.app.security.dto.MemberContext;
 import com.ll.exam.FinalProject_KimArum.util.Ut;
@@ -64,7 +64,7 @@ public class MemberRestController {
             return Ut.spring.responseEntityOf(RsData.failOf(null));
         }
 
-        MemberDto memberDto = MemberDto.getApiMemberByMember(member);
+        MemberDto memberDto = MemberDto.memberToMemberDto(member);
 
         return Ut.spring.responseEntityOf(RsData.successOf(memberDto));
     }

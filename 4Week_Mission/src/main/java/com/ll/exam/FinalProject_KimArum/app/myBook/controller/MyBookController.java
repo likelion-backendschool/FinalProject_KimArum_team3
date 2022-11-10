@@ -37,7 +37,7 @@ public class MyBookController {
         Member member = memberContext.getMember();
         List<MyBook> myBooks = myBookService.findAllByOwnerId(member.getId());
 
-        List<MyBookDto> myBookDtos = MyBookDto.getApiMyBookByMyBook(myBooks);
+        List<MyBookDto> myBookDtos = MyBookDto.myBookToMyBookDto(myBooks);
 
         return Ut.spring.responseEntityOf(
                 RsData.successOf(
@@ -63,7 +63,7 @@ public class MyBookController {
             }
         }
 
-        MyBookDto myBookDto = MyBookDto.getApiMyBookByMyBook(myBook, posts);
+        MyBookDto myBookDto = MyBookDto.myBookToMyBookDto(myBook, posts);
 
         if(myBook == null){
             return Ut.spring.responseEntityOf(RsData.of("F-1", "도서 정보가 올바르지 않습니다."));
