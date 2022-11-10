@@ -1,4 +1,4 @@
-package com.ll.exam.FinalProject_KimArum.app.member.form;
+package com.ll.exam.FinalProject_KimArum.app.member.dto;
 
 import com.ll.exam.FinalProject_KimArum.app.member.entity.Member;
 import lombok.AllArgsConstructor;
@@ -22,7 +22,7 @@ public class MemberDto {
     boolean emailVerified;
     String nickname;
 
-    public static MemberDto getApiMemberByMember(Member member) {
+    public static MemberDto memberToMemberDto(Member member) {
 
         MemberDto memberDto = MemberDto.builder()
                 .id(member.getId())
