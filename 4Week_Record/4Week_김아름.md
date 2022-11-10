@@ -169,13 +169,17 @@
 </br>
 
   > **/myBooks, /myBooks/{id} 구현 중 500 에러 발생**  
-  > No serializer found for class org.hibernate.proxy.pojo.bytebuddy.ByteBuddyInterceptor and no properties discovered to create BeanSerializer
+  > No serializer found for class org.hibernate.proxy.pojo.bytebuddy.ByteBuddyInterceptor and no properties discovered to create BeanSerializer  
 
+  [블로그 정리](https://typing.tistory.com/94)  
+  
   - **원인**  
     1. `@ManyToOne` 컬럼의 `fetch=LAZY`로 인한 JSON 오류
        - DB에서 엔티티 정보를 가져올 때 매핑되어 있는 다른 엔티티의 정보를 어느 시점에
          가져올지 정하는 옵션
-    2. springboot 설정이나 ObjectMapper를 이용해 json 으로 파싱할 때 객체 내에 필드에 대한 접근 권한이 없어서 발생
+       - MyBook 엔티티와 관계된 Member(ManyToOne), Product(OneToOne) 등이 FetchType.LAZY로 설정되어있음  
+       - Jackson으로 MyBook 엔티티를 Serialize를 할때, LAZY(LAZY 옵션은 필요할 때 조회) 설정으로 비어있는 객체를 Serialize 하려고 해서 오류 발생  
+   
 
   - **해결**  
     1. @ManyToOne 어노테이션에서 fetch=Lazy 조건 삭제
@@ -183,8 +187,8 @@
     2. 오류가 발생하는 부분에 `@JsonIgnore` 어노테이션 추가
        - JSON 오류는 발생하지 않지만 Ignore 처리한 엔티티(PostKeyword, Product 등)에 대한 정보를 불러오지 못함  
     3. **dto 생성**
-       - **엔티티에 직접 접근하고, 데이터를 사용하면서 무한 참조로 인해 오류가 발생하였음**
        - **dto를 생성하여 데이터를 전달하는 객체를 만들어 무한 참조를 예방**
+       - **entityToDto 과정에서 객체를 완성시키므로 엔티티 객체를 그대로 사용할 때처럼 LAZY 옵션으로 인해 아직 조회되지 않아 비어있는 객체가 없음**
 
 
 ### [이후개발진행]
