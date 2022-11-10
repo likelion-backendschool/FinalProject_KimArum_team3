@@ -63,7 +63,7 @@ public class MyBookDto {
         }
 
 
-        MyBookDto apiMyBook = MyBookDto.builder()
+        MyBookDto myBookDto = MyBookDto.builder()
                 .id(myBook.getId())
                 .createDate(myBook.getCreateDate())
                 .modifyDate(myBook.getModifyDate())
@@ -79,6 +79,6 @@ public class MyBookDto {
                         .build())
                 .build();
 
-        return apiMyBook;
+        return myBookDto;
     }
 }
