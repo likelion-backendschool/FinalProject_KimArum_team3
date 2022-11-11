@@ -174,7 +174,8 @@
   [블로그 정리](https://typing.tistory.com/94)  
   
   - **원인**  
-    1. `@ManyToOne` 컬럼의 `fetch=LAZY`로 인한 JSON 오류
+    - 객체 간의 무한 참조
+    - `@ManyToOne` 컬럼의 `fetch=LAZY`로 인한 JSON 오류
        - DB에서 엔티티 정보를 가져올 때 매핑되어 있는 다른 엔티티의 정보를 어느 시점에
          가져올지 정하는 옵션
        - MyBook 엔티티와 관계된 Member(ManyToOne), Product(OneToOne) 등이 FetchType.LAZY로 설정되어있음  
