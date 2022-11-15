@@ -88,11 +88,15 @@
   ```java
     @GetMapping("/me")
     public ResponseEntity<RsData> me(@AuthenticationPrincipal MemberContext memberContext){
-        if(memberContext == null){
+        Member member = memberContext.getMember();
+
+        if(member == null){
             return Ut.spring.responseEntityOf(RsData.failOf(null));
         }
 
-        return Ut.spring.responseEntityOf(RsData.successOf(memberContext));
+        MemberDto memberDto = MemberDto.memberToMemberDto(member);
+
+        return Ut.spring.responseEntityOf(RsData.successOf(memberDto));
     }
   ```
   - MemberContext를 이용해 현재 로그인되어 있는 사용자정보 확인, return
@@ -110,10 +114,12 @@
         Member member = memberContext.getMember();
         List<MyBook> myBooks = myBookService.findAllByOwnerId(member.getId());
 
+        List<MyBookDto> myBookDtos = MyBookDto.myBookToMyBookDto(myBooks);
+
         return Ut.spring.responseEntityOf(
                 RsData.successOf(
                         Ut.mapOf(
-                                "myBooks", myBooks
+                                "myBooks", myBookDtos
                         )
                 )
         );
@@ -132,6 +138,19 @@
     public ResponseEntity<RsData> detail(@PathVariable long myBookId){
         MyBook myBook = myBookService.findById(myBookId).orElse(null);
 
+        List<PostTag> postTags = postTagService.findByPostKeyword(myBook.getProduct().getPostKeyword());
+        Member author = myBook.getProduct().getAuthor();
+
+        List<Post> posts = new ArrayList<>();
+
+        for(PostTag postTag : postTags){
+            if(postTag.getMember().equals(author)){
+                posts.add(postTag.getPost());
+            }
+        }
+
+        MyBookDto myBookDto = MyBookDto.myBookToMyBookDto(myBook, posts);
+
         if(myBook == null){
             return Ut.spring.responseEntityOf(RsData.of("F-1", "도서 정보가 올바르지 않습니다."));
         }
@@ -139,7 +158,7 @@
         return Ut.spring.responseEntityOf(
                 RsData.successOf(
                         Ut.mapOf(
-                                "myBook", myBook
+                                "myBook", myBookDto
                         )
                 )
         );
@@ -155,7 +174,8 @@
   [블로그 정리](https://typing.tistory.com/94)  
   
   - **원인**  
-    1. `@ManyToOne` 컬럼의 `fetch=LAZY`로 인한 JSON 오류
+    - 객체 간의 무한 참조
+    - `@ManyToOne` 컬럼의 `fetch=LAZY`로 인한 JSON 오류
        - DB에서 엔티티 정보를 가져올 때 매핑되어 있는 다른 엔티티의 정보를 어느 시점에
          가져올지 정하는 옵션
        - MyBook 엔티티와 관계된 Member(ManyToOne), Product(OneToOne) 등이 FetchType.LAZY로 설정되어있음  
