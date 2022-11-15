@@ -36,4 +36,6 @@ out/
 ### VS Code ###
 .vscode/
 
-*.yml
+application-base-addi.yml
+application-dev.yml
+application-test.yml
