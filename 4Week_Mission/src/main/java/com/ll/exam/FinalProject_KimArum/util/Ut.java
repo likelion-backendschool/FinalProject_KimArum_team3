@@ -79,9 +79,9 @@ public class Ut {
 
     public static class json {
 
-        public static Object toStr(Map<String, Object> map) {
+        public static String toStr(Object obj) {
             try {
-                return getObjectMapper().writeValueAsString(map);
+                return getObjectMapper().writeValueAsString(obj);
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
                 return null;

@@ -1,9 +1,10 @@
 package com.ll.exam.FinalProject_KimArum.app.member.controller;
 
 import com.ll.exam.FinalProject_KimArum.app.base.dto.RsData;
+import com.ll.exam.FinalProject_KimArum.app.member.dto.LoginResponse;
+import com.ll.exam.FinalProject_KimArum.app.member.dto.MemberDto;
 import com.ll.exam.FinalProject_KimArum.app.member.entity.Member;
 import com.ll.exam.FinalProject_KimArum.app.member.form.LoginForm;
-import com.ll.exam.FinalProject_KimArum.app.member.dto.MemberDto;
 import com.ll.exam.FinalProject_KimArum.app.member.service.MemberService;
 import com.ll.exam.FinalProject_KimArum.app.security.dto.MemberContext;
 import com.ll.exam.FinalProject_KimArum.util.Ut;
@@ -48,11 +49,8 @@ public class MemberRestController {
                 RsData.of(
                         "S-1",
                         "로그인 성공, Access Token을 발급합니다.",
-                        Ut.mapOf(
-                                "accessToken", accessToken
-                        )
-                ),
-                Ut.spring.httpHeadersOf("Authentication", accessToken)
+                        new LoginResponse(accessToken)
+                )
         );
     }
 

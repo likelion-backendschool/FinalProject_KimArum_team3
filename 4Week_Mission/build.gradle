@@ -64,6 +64,10 @@ dependencies {
 
 	//spring doc openapi
 	implementation 'org.springdoc:springdoc-openapi-ui:1.6.11'
+
+	//캐시
+	implementation 'org.springframework.boot:spring-boot-starter-cache'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 }
 
 tasks.named('test') {

@@ -42,69 +42,6 @@ public class Member extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String accessToken;
 
-    public String getName() {
-        if (nickname != null) {
-            return nickname;
-        }
-
-        return username;
-    }
-
-    public Member(long id) {
-        super(id);
-    }
-
-    public String getJdenticon() {
-        return "member__" + getId();
-    }
-
-    public List<GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("MEMBER"));
-
-        // 닉네임을 가지고 있다면 작가의 권한을 가진다.
-        if (StringUtils.hasText(nickname)) {
-            authorities.add(new SimpleGrantedAuthority("AUTHOR"));
-        }
-
-        if (authLevel==AuthLevel.ADMIN) {
-            authorities.add(new SimpleGrantedAuthority("ADMIN"));
-        }
-
-        return authorities;
-    }
-
-    @JsonIgnore
-    public Map<String, Object> getAccessTokenClaims() {
-        return Ut.mapOf(
-                "id", getId(),
-                "createDate", getCreateDate(),
-                "modifyDate", getModifyDate(),
-                "username", getUsername(),
-                "email", getEmail(),
-                "emailVerified", isEmailVerified(),
-                "nickname", getNickname(),
-                "authLevel", getAuthLevel(),
-                "authorities", getAuthorities()
-        );
-    }
-
-    @JsonIgnore
-    public Map<String, Object> toMap() {
-        return Ut.mapOf(
-                "id", getId(),
-                "createDate", getCreateDate(),
-                "modifyDate", getModifyDate(),
-                "username", getUsername(),
-                "email", getEmail(),
-                "emailVerified", isEmailVerified(),
-                "nickname", getNickname(),
-                "authLevel", getAuthLevel(),
-                "authorities", getAuthorities(),
-                "accessToken", getAccessToken()
-        );
-    }
-
     public static Member fromMap(Map<String, Object> map) {
         return fromJwtClaims(map);
     }
@@ -146,5 +83,68 @@ public class Member extends BaseEntity {
                 .authLevel(authLevel)
                 .accessToken(accessToken)
                 .build();
+    }
+
+    public String getName() {
+        if (nickname != null) {
+            return nickname;
+        }
+
+        return username;
+    }
+
+    public Member(long id) {
+        super(id);
+    }
+
+    public String getJdenticon() {
+        return "member__" + getId();
+    }
+
+    public List<GrantedAuthority> genAuthorities() {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("MEMBER"));
+
+        if (getAuthLevel() == AuthLevel.ADMIN) {
+            authorities.add(new SimpleGrantedAuthority("ADMIN"));
+        }
+
+        // 닉네임을 가지고 있다면 작가의 권한을 가진다.
+        if (StringUtils.hasText(nickname)) {
+            authorities.add(new SimpleGrantedAuthority("AUTHOR"));
+        }
+
+        return authorities;
+    }
+
+    @JsonIgnore
+    public Map<String, Object> getAccessTokenClaims() {
+        return Ut.mapOf(
+                "id", getId(),
+                "createDate", getCreateDate(),
+                "modifyDate", getModifyDate(),
+                "username", getUsername(),
+                "email", getEmail(),
+                "emailVerified", isEmailVerified(),
+                "nickname", getNickname(),
+                "authLevel", getAuthLevel(),
+                "authorities", genAuthorities()
+        );
+    }
+
+    @JsonIgnore
+    public Map<String, Object> toMap() {
+        return Ut.mapOf(
+                "id", getId(),
+                "createDate", getCreateDate(),
+                "modifyDate", getModifyDate(),
+                "username", getUsername(),
+                "email", getEmail(),
+                "emailVerified", isEmailVerified(),
+                "nickname", getNickname(),
+                "authLevel", getAuthLevel(),
+                "authorities", genAuthorities(),
+                "accessToken", getAccessToken()
+        );
     }
 }
